@@ -1,0 +1,41 @@
+{
+    "name": "dinesh/magento",
+    "description": "Magento Package for Laravel",
+    "keywords": [
+        "magento",
+        "dinesh",
+        "api",
+        "eCommerce"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "dinesh",
+            "email": "dinesh@hitechvalley.com.au"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dinesh\\Magento\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "illuminate/support": "^9.0|^10.0|^11.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dinesh\\Magento\\App\\Providers\\MagentoServiceProvider"
+            ],
+            "commands": [
+                "Dinesh\\Magento\\Console\\Commands\\MakeModel"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
