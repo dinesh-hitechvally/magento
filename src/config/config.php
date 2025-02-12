@@ -9,7 +9,7 @@ return [
             "MAGENTO_CUSTOMERS"      => "customers",
             "MAGENTO_STAFFS"         => "staffs",
             "MAGENTO_COMPANIES"      => "companies",
-            "MAGENTO_CURSORS"        => "cursors",
+            "MAGENTO_PAGINATION"        => "pagination",
             "MAGENTO_ORDERS"         => "orders",
             "MAGENTO_ORDER_LINES"    => "order_lines",
             "MAGENTO_PRODUCTS"       => "products",

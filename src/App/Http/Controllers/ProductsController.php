@@ -2,20 +2,22 @@
 
 namespace Dinesh\Magento\App\Http\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+
 use Dinesh\Magento\App\Models\Products;
+
 use Dinesh\Magento\App\Http\Services\ProductService;
+use Dinesh\Magento\App\Http\Services\HookFilterService;
 
 class ProductsController extends Controller
 {
-    private $service;
+    private $productService;
 
     public function __construct(){
 
-        $this->service = new ProductService();
+        $this->productService = new ProductService();
         
     }
 
@@ -32,7 +34,7 @@ class ProductsController extends Controller
         $siteID = $this->getSiteID();
         
         $updatedProducts = [];
-        $products = $this->service->getAll($siteID);
+        $products = $this->productService->getAll($siteID);
 
         if(!isset($products['total_count'])){
             return response($products);
@@ -57,6 +59,8 @@ class ProductsController extends Controller
                 'tier_prices' => json_encode($product['tier_prices'] ),
                 'custom_attributes' => json_encode($product['custom_attributes'] ),
             ];
+
+            HookFilterService::applyFilters('product_list_loop_data_before_save', $dbVal, $this);
 
             $where = [
                 'id' => $product['id']
@@ -95,12 +99,12 @@ class ProductsController extends Controller
         $siteID = $request->siteID;
         $sku = $request->sku;
 
-        $product = $this->service->get($siteID, $sku);
+        $product = $this->productService->get($siteID, $sku);
         return response($product);
 
     }
 
-    public function getProductDetail(Request $request )
+    public function get(Request $request )
     {
 
         $validator = Validator::make(
@@ -123,7 +127,7 @@ class ProductsController extends Controller
         $siteID = $request->siteID;
         $sku = $request->sku;
 
-        $product = $this->service->get( $siteID, $sku);
+        $product = $this->productService->get( $siteID, $sku);
         if (isset($product['error'])) {
             return response($product);
         }
@@ -150,6 +154,9 @@ class ProductsController extends Controller
         $where = [
             'id' => $product['id']
         ];
+
+        HookFilterService::applyFilters('product_get_data_before_save', $dbVal, $this);
+
         $result = Products::updateOrCreate($where, $dbVal);
         $updatedProducts[] = $result;
 

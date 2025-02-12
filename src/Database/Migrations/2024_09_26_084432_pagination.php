@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
 
-    private $tableName = 'cursors';
+    private $tableName = 'pagination';
 
     /**
      * Run the migrations.
@@ -19,10 +19,10 @@ return new class extends Migration
         
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
 
-                $table->id('cursorID');
+                $table->id('pageID');
                 $table->integer('siteID');
-                $table->string('cursor_type');
-                $table->string('cursor_url');
+                $table->string('endpoint');
+                $table->string('page');
 
                 $table->timestamps(); // Created at and updated at
                 

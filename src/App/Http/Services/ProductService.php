@@ -3,45 +3,42 @@
 namespace Dinesh\Magento\App\Http\Services;
 
 use Dinesh\Magento\App\Http\Services\Magento;
-use Dinesh\Magento\App\Models\Cursors;
+use Dinesh\Magento\App\Models\Pagination;
 
 class ProductService extends Magento
 {
-
-    private static $instance = null;
-
-    // Method to get the single instance of the class (Singleton Pattern)
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new ProductService();
-        }
-
-        return self::$instance;
-    }
+    
 
     // Example: Method to get products (Extend as needed)
     public function getAll($siteID)
     {
 
         $accessToken = $this->getAccessToken($siteID);
-       
-        $data = [];
-        $nextPageUrl = Cursors::where('siteID', $siteID)
-            ->where('cursor_type', 'products')
+
+        $data = [
+            'searchCriteria' => [
+                'pageSize' => 10,
+            ],
+        ];
+
+        $endPoint = "/rest/V1/products";  
+
+        $pagination = Pagination::where('siteID', $siteID)
+            ->where('endpoint', $endPoint)
             ->orderBy('created_at', 'desc')   // Order by 'created_at' in descending site
-            ->pluck('cursor_url')
+            ->pluck('page')
             ->first();
-        $endPoint = "/rest/V1/products?searchCriteria[pageSize]=10";
+        
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
             'Accept' => 'application/json',
         ];
-        if ($nextPageUrl) {
-            $headers['X-Next-Page'] = $nextPageUrl;
+        if ($pagination) {
+            $data['searchCriteria']['currentPage'] = $pagination;
         }
-        $this->setEndPoint($siteID);
-        return $this->request('GET', $data, $headers, $endPoint, 'form', $siteID);
+
+        return $this->request('GET', $data, $headers, $endPoint, 'query', $siteID );
+
     }
 
     public function get($siteID, $sku)
@@ -54,7 +51,6 @@ class ProductService extends Magento
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
             'Accept' => 'application/json',
         ];
-        $this->setEndPoint($siteID);
         return $this->request('GET', $data, $headers, $endPoint);
     }
 

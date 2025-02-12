@@ -4,24 +4,36 @@ namespace Dinesh\Magento\App\Http\Services;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use Dinesh\Magento\App\Models\Cursors;
+use Dinesh\Magento\App\Models\Websites;
 use Dinesh\Magento\App\Models\Requests;
+use Dinesh\Magento\App\Models\Pagination;
 use Dinesh\Magento\App\Models\AccessTokens;
 use Dinesh\Magento\App\Models\RefreshTokens;
-use Dinesh\Magento\App\Models\Websites;
+
 
 class Magento
 {
 
-    private $endPoint;
+    protected $endPoint = null;
+    private static $instance = null;
 
-    // Private constructor to prevent direct object creation
-    function __construct()
+    public static function getInstance()
     {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
 
+        return self::$instance;
     }
 
-    public function setEndPoint($siteID){
+    public function setEndPoint($siteID)
+    {
+        $endPoint = Websites::where('siteID', $siteID)->pluck('url')->first();
+        $this->endPoint = $endPoint;
+    }
+
+    public function getEndPoint($siteID)
+    {
         $endPoint = Websites::where('siteID', $siteID)->pluck('url')->first();
         $this->endPoint = $endPoint;
     }
@@ -34,6 +46,8 @@ class Magento
             dd('Unable to get access token without siteID.');
         }
 
+        $this->setEndPoint($siteID);
+
         $accessRow = AccessTokens::where('siteID', $siteID )->orderBy('siteID', 'desc')->first();
 
         if (isset($accessRow->access_token)) {
@@ -45,8 +59,6 @@ class Magento
             dd('Please configure magento website first before proceeding.');
         }
         
-        $this->setEndPoint($siteID);
-
         $method = 'POST';
         $headers = [
             'Content-Type' => 'application/json',
@@ -104,29 +116,27 @@ class Magento
 
     }
 
-    public function saveCursor($cursorUrl, $companyID){
+    public function savePagination( $endPoint, $response, $siteID){
 
-        if(!$cursorUrl){
+        if(!$endPoint){
             return;
         }
 
-        if (!$companyID) {
+        if (!$siteID) {
             return;
         }
 
-        $pattern = '/\/([^\/]+)\.json/';
-        preg_match($pattern, $cursorUrl, $matches);
-
-        // Check if a match is found
-        $cursor_type = (isset($matches[1])) ? $matches[1] : '';
+        $search_criteria = $response['search_criteria'] ?? [];
+        $current_page = $search_criteria['current_page'] ?? 1;
+        $page = $current_page+1;
 
         $data = [
-            'cursor_url' => $cursorUrl,
-            'cursor_type' => $cursor_type,
-            'company_id' => $companyID
+            'siteID' => $siteID,
+            'endpoint' => $endPoint,
+            'page' => $page,
         ];
 
-        Cursors::create($data);
+        Pagination::create($data);
         
     }
 
@@ -141,12 +151,16 @@ class Magento
         $options = [
             'headers' => $headers
         ];
+        $apiUrl = $requestUrl;
         switch ($type) {
             case "form":
                 $options['form_params'] = $data;
                 break;
             case "body":
                 $options['body'] = json_encode($data);
+                break;
+            case "query":
+                $options['query'] = $data;
                 break;
             default:
                 $options['form_params'] = $data;
@@ -155,7 +169,7 @@ class Magento
 
         try {
             
-            $response = $client->request($method, $requestUrl, $options );
+            $response = $client->request($method, $apiUrl, $options );
 
             $responseArr = json_decode($response->getBody(), true);
 
@@ -166,6 +180,8 @@ class Magento
             if(isset($responseArr['error'])){
                 return $responseArr;
             }
+
+            $this->savePagination( $endPoint, $responseArr, $cursorSiteID);
 
             // Return the response as a decoded JSON array
             return $responseArr;

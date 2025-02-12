@@ -4,27 +4,21 @@ namespace Dinesh\Magento\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cursors extends Model
+class Pagination extends Model
 {
     //
     protected $table = '';
     protected $connection = '';
 
-    protected $primaryKey = 'cursorID';
+    protected $primaryKey = 'pageID';
 
-    protected $fillable = [
-        'siteID',
-        'cursor_type',
-        'cursor_url',
-        'created_at',
-        'updated_at',
-    ];
+    protected $guarded = []; 
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
         // Set the table name dynamically from the config
-        $this->table = config('magento.models.magento.MAGENTO_CURSORS');
+        $this->table = config('magento.models.magento.MAGENTO_PAGINATION');
         $this->connection = config('magento.connection', 'mysql');
     }
 }

@@ -11,17 +11,7 @@ class Requests extends Model
     protected $connection = '';
 
     protected $primaryKey = 'requestID';
-
-    protected $fillable = [
-        'method',
-        'url',
-        'name',
-        'code',
-        'rate_limit',
-        'rate_limit_remaining',
-        'rate_limit_reset',
-        'rate_limit_resetdate'
-    ];
+    protected $guarded = []; 
 
     public function __construct(array $attributes = [])
     {

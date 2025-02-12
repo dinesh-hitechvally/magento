@@ -2,21 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use Dinesh\Magento\App\Http\Controllers\OrdersController;
-use Dinesh\Magento\App\Http\Controllers\StaffsController;
 use Dinesh\Magento\App\Http\Controllers\CustomersController;
-use Dinesh\Magento\App\Http\Controllers\CompaniesController;
 use Dinesh\Magento\App\Http\Controllers\ProductsController;
-use Dinesh\Magento\App\Http\Controllers\WebhooksController;
 Route::prefix('api')->group(function () {
 
     Route::prefix('magento')->group(function () {
 
         Route::prefix('v1')->group(function () {
-
-            /*
-             * Only needed when we need to setup new company
-             */
-            //Route::get('/token', [TokensController::class, 'getToken']);
 
             Route::prefix('customer')->group(function () {
 
@@ -47,7 +39,7 @@ Route::prefix('api')->group(function () {
 
                 Route::get('/live', [ProductsController::class, 'live']);
                 Route::get('/list', [ProductsController::class, 'index']);
-                Route::get('/get', [ProductsController::class, 'getProductDetail']);
+                Route::get('/get', [ProductsController::class, 'get']);
 
             });
 
