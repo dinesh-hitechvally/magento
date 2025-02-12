@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Dinesh\Magento\App\Http\Controllers\SitesController;
 use Dinesh\Magento\App\Http\Controllers\OrdersController;
 use Dinesh\Magento\App\Http\Controllers\StaffsController;
 use Dinesh\Magento\App\Http\Controllers\CustomersController;
@@ -34,16 +33,6 @@ Route::prefix('api')->group(function () {
 
             });
 
-            Route::prefix('staff')->group(function () {
-
-                Route::get('/live', [StaffsController::class, 'live']);
-                Route::get('/list', [StaffsController::class, 'index']);
-                Route::get('/listdetail', [StaffsController::class, 'getStaffs']);
-
-                Route::get('/get', [StaffsController::class, 'getStaffDetail']);
-
-            });
-
             Route::prefix('order')->group(function () {
 
                 Route::get('/live', [OrdersController::class, 'live']);
@@ -54,42 +43,12 @@ Route::prefix('api')->group(function () {
 
             });
 
-            Route::prefix('company')->group(function () {
-
-                Route::get('/status/{companyID}', [CompaniesController::class, 'getStatus']);
-                Route::get('/detail/{companyID}', [CompaniesController::class, 'getCompany']);
-                
-            });
-
-            Route::prefix('site')->group(function () {
-
-                Route::get('/live', [SitesController::class, 'live']);
-                Route::get('/list', [SitesController::class, 'index']);
-                Route::get('/listdetail', [SitesController::class, 'getSitesDetail']);
-                Route::get('/get', [SitesController::class, 'getSiteDetail']);
-
-            });
-
             Route::prefix('product')->group(function () {
 
                 Route::get('/live', [ProductsController::class, 'live']);
                 Route::get('/list', [ProductsController::class, 'index']);
                 Route::get('/get', [ProductsController::class, 'getProductDetail']);
 
-            });
-
-            Route::prefix('webhook')->group(function () {
-
-                Route::get('/all', [WebhooksController::class, 'Index']);
-                Route::get('/create', [WebhooksController::class, 'create']);
-                Route::get('/update', [WebhooksController::class, 'update']);
-
-                Route::post('/staff/{companyID}', [WebhooksController::class, 'getStaff']);
-                Route::post('/order/{companyID}', [WebhooksController::class, 'getOrder']);
-                Route::post('/product/{companyID}', [WebhooksController::class, 'getProduct']);
-                Route::post('/customer/{companyID}', [WebhooksController::class, 'getCustomer']);
-                Route::post('/delcustomer/{companyID}', [WebhooksController::class, 'delCustomer']);
-                
             });
 
         });
