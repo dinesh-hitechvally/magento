@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
 
-    private $tableName = 'MAGENTO_requests';
+    private $tableName = 'requests';
     /**
      * Run the migrations.
      */
