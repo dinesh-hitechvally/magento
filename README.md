@@ -18,7 +18,7 @@ Publishing Configuration
 After installing the package, you may publish the configuration file to customize settings:
 
 bash
-php artisan vendor:publish --provider="Dinesh\Magento\LightspeedServiceProvider" --tag=config
+php artisan vendor:publish --provider="Dinesh\Magento\MagentoServiceProvider" --tag=config
 This will copy the configuration file to config/config.php where you can adjust the table name and database connection settings.
 
 Configuration
@@ -37,7 +37,7 @@ Make sure to define the magento_connection in your config/database.php file:
         'driver' => 'mysql',
         'host' => env('DB_HOST', '127.0.0.1'),
         'port' => env('DB_PORT', '3306'),
-        'database' => env('DB_DATABASE', 'MAGENTO_database'),
+        'database' => env('DB_DATABASE', 'magento_database'),
         'username' => env('DB_USERNAME', 'root'),
         'password' => env('DB_PASSWORD', ''),
         'charset' => 'utf8mb4',
