@@ -18,7 +18,6 @@ interface ApiInterfaceService
     /*
      * Create these functions to child class
      */
-
     public function getAll($setupID);
     public function create($setupID, $data);
     public function get($setupID, $id);

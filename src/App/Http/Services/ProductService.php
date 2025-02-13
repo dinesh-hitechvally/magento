@@ -70,7 +70,8 @@ class ProductService extends Magento
     public function update($setupID, $productID, $data)
     {
         $accessToken = $this->getAccessToken($setupID);
-        $endPoint = "/companies/{$setupID}/products/{$setupID}.json";
+        
+        $endPoint = "/rest/V1/products/{$productID}";
 
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
