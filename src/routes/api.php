@@ -22,10 +22,8 @@ Route::prefix('api')->group(function () {
 
                 Route::get('/live', [OrdersController::class, 'live']);
                 Route::get('/list', [OrdersController::class, 'index']);
-                Route::get('/listdetail', [OrdersController::class, 'getOrdersDetail']);
-                Route::get('/get', [OrdersController::class, 'getOrderDetail']);
-                Route::get('/update', [OrdersController::class, 'updateOrder']);
-
+                Route::get('/get', [OrdersController::class, 'get']);
+                
             });
 
             Route::prefix('product')->group(function () {

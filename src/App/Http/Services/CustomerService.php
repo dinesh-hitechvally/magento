@@ -2,10 +2,7 @@
 
 namespace Dinesh\Magento\App\Http\Services;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
 use Dinesh\Magento\App\Http\Services\Magento;
-use Dinesh\Magento\App\Models\Logs;
 use Dinesh\Magento\App\Models\Pagination;
 
 class CustomerService extends Magento{

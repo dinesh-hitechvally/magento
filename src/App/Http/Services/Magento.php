@@ -132,7 +132,8 @@ abstract class Magento implements ApiInterfaceService
 
         $search_criteria = $response['search_criteria'] ?? [];
         $current_page = $search_criteria['current_page'] ?? 1;
-        $page = $current_page+1;
+        //$page = $current_page+1;
+        $page = 1;
 
         $data = [
             'setupID' => $setupID,
