@@ -81,6 +81,7 @@ class CustomerService extends Magento{
         HookFilterService::applyFilters('customer_data_before_save', $dbVal, $this);
 
         $where = [
+            'setupID' => $setupID,
             'id' => $customer['id']
         ];
         $result = Customers::updateOrCreate($where, $dbVal);
