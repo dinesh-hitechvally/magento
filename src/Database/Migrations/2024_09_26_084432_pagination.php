@@ -24,7 +24,24 @@ return new class extends Migration
                 $table->string('endpoint');
                 $table->string('page');
 
+                /*
+                 * Timestamps
+                 */
                 $table->timestamps(); // Created at and updated at
+
+                /*
+                 * Index
+                 */
+                $table->index('setupID');
+                $table->index('endpoint');
+
+                /*
+                 * Foreign Keys
+                 */
+                $table->foreign('setupID')
+                    ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
+                    ->on('setup') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
                 
             });
 

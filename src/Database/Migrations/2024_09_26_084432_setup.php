@@ -22,6 +22,9 @@ return new class extends Migration
                 $table->string('user');
                 $table->string('password');
 
+                /*
+                 * Timestamps
+                 */
                 $table->timestamps(); // Created at and updated at
                 
             });

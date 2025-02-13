@@ -25,7 +25,12 @@ return new class extends Migration
                 $table->integer('rate_limit_remaining')->nullable();
                 $table->bigInteger('rate_limit_reset')->nullable();
                 $table->dateTime('rate_limit_resetdate')->nullable();
+
+                /*
+                 * Timestamps
+                 */
                 $table->timestamps(); // Created at and updated at
+
                 
             });
 

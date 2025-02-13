@@ -36,10 +36,24 @@ return new class extends Migration
                 $table->json('tier_prices')->nullable();
                 $table->json('custom_attributes');
 
+                /*
+                 * Timestamps
+                 */
                 $table->timestamps(); // Created at and updated at
 
+                /*
+                 * Index
+                 */
                 $table->index('id');
                 $table->index('setupID');
+
+                /*
+                 * Foreign Keys
+                 */
+                $table->foreign('setupID')
+                    ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
+                    ->on('setup') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
                 
             });
 
