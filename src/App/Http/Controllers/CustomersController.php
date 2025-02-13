@@ -116,7 +116,7 @@ class CustomersController extends Controller
         $updatedCustomers = [];
         $query = $request->all();
         $customer = $this->customers->search($setupID, $query);
-        if (isset($customer['error'])) {
+        if (!isset($customer['id'])) {
             return response($customer);
         }
         $customers = [$customer];
@@ -156,7 +156,7 @@ class CustomersController extends Controller
 
     
 
-    public function getCustomerDetail(Request $request)
+    public function get(Request $request)
     {
 
         $validator = Validator::make(
@@ -181,38 +181,34 @@ class CustomersController extends Controller
         $setupID = $request->setupID;
 
         $customer = $this->customers->get($setupID, $customerID);
-        if (isset($customer['error'])) {
+        if (!isset($customer['id'])) {
             return response($customer);
         }
 
         $dbVal = [
-            'id' => $customer['id'],
             'setupID' => $setupID,
-            'first_name' => $customer['first_name'],
-            'last_name' => $customer['last_name'],
+            'id' => $customer['id'],
+            'group_id' => $customer['group_id'],
+            'default_billing' => $customer['default_billing'] ?? null,
+            'default_shipping' => $customer['default_shipping'] ?? null,
+            'm_created_at' => $customer['created_at'],
+            'm_updated_at' => $customer['updated_at'],
+            'created_in' => $customer['created_in'],
+            'dob' => $customer['dob'] ?? null,
             'email' => $customer['email'],
-            'primary_email_address' => $customer['primary_email_address'],
-            'primary_address' => $customer['primary_address']['address'],
-            'primary_city' => $customer['primary_address']['city'],
-            'primary_state' => $customer['primary_address']['state'],
-            'primary_postal_code' => $customer['primary_address']['postal_code'],
-            'primary_country' => $customer['primary_address']['country'],
-            'phone' => $customer['phone'],
-            'tags' => json_encode($customer['tags']),
-            'reference_id' => $customer['reference_id'],
-            'image' => $customer['image'],
-            'accepts_marketing' => $customer['accepts_marketing'],
-            'ls_created_at' => Carbon::parse($customer['created_at'])->format('Y-m-d H:i:s'),
-            'ls_updated_at' => Carbon::parse($customer['updated_at'])->format('Y-m-d H:i:s'),
-            'detail_pending' => 0,
-            
+            'firstname' => $customer['firstname'],
+            'lastname' => $customer['lastname'],
+            'gender' => $customer['gender'] ?? null,
+            'store_id' => $customer['store_id'],
+            'website_id' => $customer['website_id'],
+            'addresses' => json_encode($customer['addresses']),
+            'disable_auto_group_change' => $customer['disable_auto_group_change'],
+            'extension_attributes' => json_encode($customer['extension_attributes']),
         ];
-
 
         $where = [
             'id' => $customer['id']
         ];
-
 
         $result = Customers::updateOrCreate($where, $dbVal);
 

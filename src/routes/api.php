@@ -13,16 +13,9 @@ Route::prefix('api')->group(function () {
             Route::prefix('customer')->group(function () {
 
                 Route::get('/live', [CustomersController::class, 'live']);
-
                 Route::get('/list', [CustomersController::class, 'index']);
-                Route::get('/search', [CustomersController::class, 'search']);
-                Route::get('/listdetail', [CustomersController::class, 'getCustomers']);
-                Route::get('/updatetags', [CustomersController::class, 'updateTags']);
-
-                Route::get('/create', [CustomersController::class, 'createCustomerDetail']);
-                Route::get('/get', [CustomersController::class, 'getCustomerDetail']);
-                Route::get('/update', [CustomersController::class, 'updateCustomerDetail']);
-
+                Route::get('/get', [CustomersController::class, 'get']);
+                
             });
 
             Route::prefix('order')->group(function () {

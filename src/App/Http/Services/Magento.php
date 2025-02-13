@@ -8,10 +8,10 @@ use Dinesh\Magento\App\Models\Setup;
 use Dinesh\Magento\App\Models\Requests;
 use Dinesh\Magento\App\Models\Pagination;
 use Dinesh\Magento\App\Models\AccessTokens;
-use Dinesh\Magento\App\Models\RefreshTokens;
 
+use Dinesh\Magento\App\Http\Structure\ApiInterfaceService;
 
-class Magento
+abstract class Magento implements ApiInterfaceService
 {
 
     protected $endPoint = null;
@@ -20,7 +20,7 @@ class Magento
     public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = new self();
+            self::$instance = new static();
         }
 
         return self::$instance;
@@ -207,5 +207,15 @@ class Magento
 
         }
     }
+
+    abstract public function getAll($setupID);
+
+    abstract public function create($setupID, $data);
+
+    abstract public function get($setupID, $id);
+
+    abstract public function update($setupID, $id, $data);
+
+    abstract public function delete($setupID, $id);
 
 }

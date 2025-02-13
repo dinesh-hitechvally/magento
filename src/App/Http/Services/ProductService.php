@@ -41,6 +41,19 @@ class ProductService extends Magento
 
     }
 
+    public function create($setupID, $data)
+    {
+        $accessToken = $this->getAccessToken($setupID);
+        $endPoint = "/rest/V1/products";
+
+        $headers = [
+            'Authorization' => "Bearer {$accessToken}", // Replace with valid token
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ];
+        return $this->request('POST', $data, $headers, $endPoint, 'body');
+    }
+
     public function get($setupID, $sku)
     {
         $accessToken = $this->getAccessToken($setupID);
@@ -65,4 +78,18 @@ class ProductService extends Magento
         ];
         return $this->request('PUT', $data, $headers, $endPoint, 'body');
     }
+
+    public function delete($setupID, $sku)
+    {
+        $accessToken = $this->getAccessToken($setupID);
+        $data = [];
+        $endPoint = "/rest/V1/products/{$sku}";
+
+        $headers = [
+            'Authorization' => "Bearer {$accessToken}", // Replace with valid token
+            'Accept' => 'application/json',
+        ];
+        return $this->request('DELETE', $data, $headers, $endPoint);
+    }
+
 }
