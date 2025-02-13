@@ -23,7 +23,24 @@ return new class extends Migration
                 $table->integer('setupID'); // Auto-incrementing ID
                 $table->string('access_token');
                 $table->dateTime('expire_at'); //Expire at
-                $table->timestamps(); // Created at and updated at
+
+                /*
+                 * Timestamps
+                 */
+                $table->timestamps();
+
+                /*
+                 * Index
+                 */
+                $table->index('setupID');
+
+                /*
+                 * Foreign Keys
+                 */
+                $table->foreign('setupID')
+                    ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
+                    ->on('setup') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
 
             });
         }

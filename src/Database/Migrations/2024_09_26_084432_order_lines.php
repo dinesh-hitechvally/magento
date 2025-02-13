@@ -84,11 +84,25 @@ return new class extends Migration
                 $table->index('order_id');
                 $table->index('item_id');
                 $table->index('store_id');
+                $table->index('product_id');
 
                 /*
                  * Foreign Keys
                  */
-                
+                $table->foreign('setupID')
+                    ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
+                    ->on('setup') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
+
+                $table->foreign('order_id')
+                    ->references('entity_id') // Reference to the 'entity_id' column in the 'orders' table
+                    ->on('orders') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
+
+                $table->foreign('product_id')
+                    ->references('id') // Reference to the 'id' column in the 'products' table
+                    ->on('products') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
 
             });
 

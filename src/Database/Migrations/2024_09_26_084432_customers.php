@@ -37,10 +37,24 @@ return new class extends Migration
                 $table->integer('disable_auto_group_change'); 
                 $table->json('extension_attributes'); 
 
-                $table->timestamps(); 
+                /*
+                 * Timestamps
+                 */
+                $table->timestamps();
 
-                $table->index('id');
+                /*
+                 * Index
+                 */
                 $table->index('setupID');
+                $table->index('id');
+
+                /*
+                 * Foreign Keys
+                 */
+                $table->foreign('setupID')
+                    ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
+                    ->on('setup') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
                 
             });
             

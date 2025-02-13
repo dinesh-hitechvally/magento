@@ -98,10 +98,27 @@ return new class extends Migration
                 $table->integer('total_qty_ordered');
                 $table->dateTime('m_updated_at');
                 $table->decimal('weight');
-                
+
+                /*
+                 * Timestamps
+                 */
                 $table->timestamps(); // Created at and updated at
 
+                /*
+                 * Index
+                 */
                 $table->index('setupID');
+                $table->index('entity_id');
+                $table->index('quote_id');
+                $table->index('store_id');
+
+                /*
+                 * Foreign Keys
+                 */
+                $table->foreign('setupID')
+                    ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
+                    ->on('setup') // The related table
+                    ->onDelete('cascade'); // Action on deletion (optional, can be changed)
 
             });
 
