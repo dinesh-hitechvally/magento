@@ -51,16 +51,16 @@ class CustomerService extends Magento{
             'Accept' => 'application/json',
         ];
 
-        return $this->request('GET', $data, $headers, $endPoint, 'form', $companyID);
+        return $this->request('GET', $data, $headers, $endPoint, 'query', $setupID);
 
     }
 
-    public function search($companyID, $query)
+    public function search($setupID, $query)
     {
-        $accessToken = $this->getAccessToken($companyID);
+        $accessToken = $this->getAccessToken($setupID);
         $data = [];
         $queryParams = http_build_query($query);
-        $endPoint = "/companies/{$companyID}/customers.json?{$queryParams}";
+        $endPoint = "/companies/{$setupID}/customers.json?{$queryParams}";
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
             'Accept' => 'application/json',
@@ -68,10 +68,10 @@ class CustomerService extends Magento{
         return $this->request('GET', $data, $headers, $endPoint);
     }
 
-    public function create( $companyID, $data )
+    public function create( $setupID, $data )
     {
-        $accessToken = $this->getAccessToken($companyID);
-        $endPoint = "/companies/{$companyID}/customers.json";
+        $accessToken = $this->getAccessToken($setupID);
+        $endPoint = "/companies/{$setupID}/customers.json";
 
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
@@ -81,11 +81,11 @@ class CustomerService extends Magento{
         return $this->request('POST', $data, $headers, $endPoint, 'body' );
     }
 
-    public function get($companyID, $customerID)
+    public function get($setupID, $customerID)
     {
-        $accessToken = $this->getAccessToken($companyID);
+        $accessToken = $this->getAccessToken($setupID);
         $data = [];
-        $endPoint = "/companies/{$companyID}/customers/{$customerID}.json";
+        $endPoint = "/companies/{$setupID}/customers/{$customerID}.json";
 
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
@@ -94,10 +94,10 @@ class CustomerService extends Magento{
         return $this->request('GET', $data, $headers, $endPoint);
     }
 
-    public function update($companyID, $customerID, $data)
+    public function update($setupID, $customerID, $data)
     {
-        $accessToken = $this->getAccessToken($companyID);
-        $endPoint = "/companies/{$companyID}/customers/{$customerID}.json";
+        $accessToken = $this->getAccessToken($setupID);
+        $endPoint = "/companies/{$setupID}/customers/{$customerID}.json";
 
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
@@ -109,7 +109,7 @@ class CustomerService extends Magento{
         
     }
 
-    public function createNewCustomer( $companyID, $customer )
+    public function createNewCustomer( $setupID, $customer )
     {
 
         // Define validation rules
@@ -177,7 +177,7 @@ class CustomerService extends Magento{
             $data['accepts_marketing'] = $customer['accepts_marketing'] ? true : false;
         }
 
-        $result = $this->create($companyID, $data);
+        $result = $this->create($setupID, $data);
 
         if (isset($result['error'])) {
             return response()->json($result, 200);

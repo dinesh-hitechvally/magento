@@ -21,12 +21,12 @@ return new class extends Migration
                 $table->bigInteger('setupID');
                 $table->integer('id');
                 $table->integer('group_id');
-                $table->integer('default_billing'); // First name
-                $table->integer('default_shipping'); // Last name
+                $table->integer('default_billing')->nullable();
+                $table->integer('default_shipping')->nullable();
                 $table->dateTime('m_created_at'); // Email
                 $table->dateTime('m_updated_at'); // Primary email address
-                $table->dateTime('created_in'); // Primary address
-                $table->date('dob'); // City
+                $table->string('created_in'); // Primary address
+                $table->date('dob')->nullable();
                 $table->string('email'); // State
                 $table->string('firstname'); // Postal code
                 $table->string('lastname'); // Country

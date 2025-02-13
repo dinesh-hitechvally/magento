@@ -34,33 +34,34 @@ class CustomersController extends Controller
     public function index(Request $request)
     {
 
-        $companyID = $this->getSetupID();
+        $setupID = $this->getSetupID();
 
         $updatedCustomers = [];
-        $customers = $this->customers->getAll($companyID);
-        if (isset($customers['error'])) {
+        $customers = $this->customers->getAll($setupID);
+        if (!isset($customers['total_count'])) {
             return response($customers);
         }
-        foreach ($customers as $customer) {
-
+        
+        foreach ($customers['items'] as $customer) {
             $dbVal = [
-                'id' => $customer['id'],
-                'company_id' => $companyID,
-                'first_name' => $customer['first_name'],
-                'last_name' => $customer['last_name'],
+                'setupID' => $setupID,
+                'id' => $customer['id'],               
+                'group_id' => $customer['group_id'],
+                'default_billing' => $customer['default_billing'] ?? null,
+                'default_shipping' => $customer['default_shipping'] ?? null,
+                'm_created_at' => $customer['created_at'],
+                'm_updated_at' => $customer['updated_at'],
+                'created_in' => $customer['created_in'],
+                'dob' => $customer['dob'] ?? null,
                 'email' => $customer['email'],
-                'primary_email_address' => $customer['primary_email_address'],
-                'primary_address' => $customer['primary_address']['address'],
-                'primary_city' => $customer['primary_address']['city'],
-                'primary_state' => $customer['primary_address']['state'],
-                'primary_postal_code' => $customer['primary_address']['postal_code'],
-                'primary_country' => $customer['primary_address']['country'],
-                'phone' => $customer['phone'],
-                'tags' => json_encode($customer['tags']),
-                'reference_id' => $customer['reference_id'],
-                'image' => $customer['image'],
-                'accepts_marketing' => $customer['accepts_marketing'],
-                'detail_pending' => 1,
+                'firstname' => $customer['firstname'],
+                'lastname' => $customer['lastname'],
+                'gender' => $customer['gender'] ?? 0,
+                'store_id' => $customer['store_id'],
+                'website_id' => $customer['website_id'],
+                'addresses' => json_encode($customer['addresses']),
+                'disable_auto_group_change' => $customer['disable_auto_group_change'],
+                'extension_attributes' => json_encode($customer['extension_attributes']),
             ];
 
             $where = [
@@ -84,7 +85,7 @@ class CustomersController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'companyID' => 'required|integer',
+                'setupID' => 'required|integer',
                 'customerID' => 'required|integer',
             ]
         );
@@ -92,16 +93,16 @@ class CustomersController extends Controller
             $error = $validator->errors();
             $error = [
                 'success' => false,
-                'message' => 'companyID & customerID is required field.',
+                'message' => 'setupID & customerID is required field.',
                 'data' => $validator->errors(),
             ];
             return response()->json($error, 400);
         }
 
-        $companyID = $request->companyID;
+        $setupID = $request->setupID;
         $customerID = $request->customerID;
 
-        $customer = $this->customers->get($companyID, $customerID);
+        $customer = $this->customers->get($setupID, $customerID);
 
         return response($customer);
 
@@ -110,11 +111,11 @@ class CustomersController extends Controller
     public function search(Request $request)
     {
 
-        $companyID = $this->getSetupID();
+        $setupID = $this->getSetupID();
         
         $updatedCustomers = [];
         $query = $request->all();
-        $customer = $this->customers->search($companyID, $query);
+        $customer = $this->customers->search($setupID, $query);
         if (isset($customer['error'])) {
             return response($customer);
         }
@@ -122,7 +123,7 @@ class CustomersController extends Controller
         foreach ($customers as $customer) {
             $dbVal = [
                 'id' => $customer['id'],
-                'company_id' => $companyID,
+                'setupID' => $setupID,
                 'first_name' => $customer['first_name'],
                 'last_name' => $customer['last_name'],
                 'email' => $customer['email'],
@@ -162,7 +163,7 @@ class CustomersController extends Controller
             $request->all(),
             [
                 'topic' => 'nullable', //For webhook
-                'companyID' => 'required|integer',
+                'setupID' => 'required|integer',
                 'customerID' => 'required|integer',
             ]
         );
@@ -170,23 +171,23 @@ class CustomersController extends Controller
             $error = $validator->errors();
             $error = [
                 'success' => false,
-                'message' => 'companyID & customerID is required field.',
+                'message' => 'setupID & customerID is required field.',
                 'data' => $validator->errors(),
             ];
             return response()->json($error, 400);
         }
 
         $customerID = $request->customerID;
-        $companyID = $request->companyID;
+        $setupID = $request->setupID;
 
-        $customer = $this->customers->get($companyID, $customerID);
+        $customer = $this->customers->get($setupID, $customerID);
         if (isset($customer['error'])) {
             return response($customer);
         }
 
         $dbVal = [
             'id' => $customer['id'],
-            'company_id' => $companyID,
+            'setupID' => $setupID,
             'first_name' => $customer['first_name'],
             'last_name' => $customer['last_name'],
             'email' => $customer['email'],
@@ -229,9 +230,9 @@ class CustomersController extends Controller
     public function createCustomerDetail(Request $request)
     {
         dd($request); // Create customer if needed from customers service not from controller
-        $companyID = $this->getSetupID();
+        $setupID = $this->getSetupID();
         $where = [
-            'company_id' => $companyID,
+            'setupID' => $setupID,
             'lightSpeedPending' => 1,
             'isLoyalty' => 1,
         ];
@@ -287,7 +288,7 @@ class CustomersController extends Controller
             $data['reference_id'] = $customer->reference_id;
         }
 
-        $response = $this->customers->create($companyID, $data);
+        $response = $this->customers->create($setupID, $data);
 
         if (isset($response['error'])) {
             return response()->json($response, 200);
@@ -306,25 +307,25 @@ class CustomersController extends Controller
             $request->all(),
             [
                 'customerID' => 'required|integer',
-                'companyID' => 'required|integer',
+                'setupID' => 'required|integer',
             ]
         );
         if ($validator->fails()) {
             $error = $validator->errors();
             $error = [
                 'success' => false,
-                'message' => 'companyID & customerID are required fields.',
+                'message' => 'setupID & customerID are required fields.',
                 'data' => $validator->errors(),
             ];
             return response()->json($error, 400);
         }
 
-        $companyID = $request->companyID;
+        $setupID = $request->setupID;
         $customerID = $request->customerID;
 
         $where = [
             'id' => $customerID,
-            'company_id' => $companyID,
+            'setupID' => $setupID,
             'lightSpeedPending' => 1,
             'isLoyalty' => 1,
         ];
@@ -375,7 +376,7 @@ class CustomersController extends Controller
             ]
         ];
 
-        $response = $this->customers->update($companyID, $customerID, $data);
+        $response = $this->customers->update($setupID, $customerID, $data);
 
         if (isset($response['error'])) {
             return response()->json($response, 200);
@@ -394,7 +395,7 @@ class CustomersController extends Controller
             ->whereNotNull('id')
             ->orderBy('updated_at', 'ASC')
             ->limit(10) // Limit the results to 10
-            ->select('customerID', 'id', 'company_id', 'updated_at', 'isLoyalty') // Specify the columns you want
+            ->select('customerID', 'id', 'setupID', 'updated_at', 'isLoyalty') // Specify the columns you want
             ->get();
 
         $updatedCustomers = [];
@@ -411,15 +412,15 @@ class CustomersController extends Controller
         foreach ($customers as $cust) {
 
             $customerID = $cust->id;
-            $companyID = $cust->company_id;
+            $setupID = $cust->setupID;
             $isLoyalty = $cust->isLoyalty;
 
-            $customer = $this->customers->get($companyID, $customerID);
+            $customer = $this->customers->get($setupID, $customerID);
 
             if (isset($customer['error'])) {
 
                 $customer['customerID'] = $customerID;
-                $customer['company_id'] = $companyID;
+                $customer['setupID'] = $setupID;
 
                 $updatedCustomers[] = $customer;
 
@@ -428,7 +429,7 @@ class CustomersController extends Controller
 
             $dbVal = [
                 'id' => $customer['id'],
-                'company_id' => $companyID,
+                'setupID' => $setupID,
                 'first_name' => $customer['first_name'],
                 'last_name' => $customer['last_name'],
                 'email' => $customer['email'],
@@ -471,11 +472,11 @@ class CustomersController extends Controller
 
         $debug = request()->query('debug') ?? 0;
         
-        $companyID = $this->getSetupID();
+        $setupID = $this->getSetupID();
         $where = [
             'lightSpeedPendingTags' => 1,
             'isLoyalty' => 1,
-            'company_id' => $companyID,
+            'setupID' => $setupID,
         ];
         
         $customers = Customers::where($where)->limit(10)->get();
@@ -505,7 +506,7 @@ class CustomersController extends Controller
                 'tags' => $tags,
                 'reference_id' => $customer->reference_id,
             ];
-            $response = $this->customers->update($companyID, $customer->id, $data);
+            $response = $this->customers->update($setupID, $customer->id, $data);
             if (!isset($response['error'])) {
                 $customer->lightSpeedPendingTags = 0;
                 $customer->save();

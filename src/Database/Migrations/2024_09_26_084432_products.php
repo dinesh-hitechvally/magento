@@ -23,7 +23,7 @@ return new class extends Migration
                 $table->string('sku');
                 $table->string('name');
                 $table->integer('attribute_set_id');
-                $table->decimal('price');
+                $table->decimal('price')->nullable(); //Magento api doesnot send price to all products
                 $table->integer('status');
                 $table->integer('visibility');
                 $table->string('type_id');
