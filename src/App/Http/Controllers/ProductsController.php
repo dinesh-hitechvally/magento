@@ -21,27 +21,27 @@ class ProductsController extends Controller
         
     }
 
-    public function getSiteID()
+    public function getSetupID()
     {
-        $siteID = 1;
-        return $siteID;
+        $setupID = 1;
+        return $setupID;
 
     }
 
     public function index(Request $request)
     {
 
-        $siteID = $this->getSiteID();
+        $setupID = $this->getSetupID();
         
         $updatedProducts = [];
-        $products = $this->productService->getAll($siteID);
+        $products = $this->productService->getAll($setupID);
 
         if(!isset($products['total_count'])){
             return response($products);
         }
         foreach($products['items'] as $product){
             $dbVal = [
-                'siteID' => $siteID,
+                'setupID' => $setupID,
                 'id' => $product['id'],
                 'sku' => $product['sku'],
                 'name' => $product['name'],
@@ -82,7 +82,7 @@ class ProductsController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'siteID' => 'required|integer',
+                'setupID' => 'required|integer',
                 'sku' => 'required|string',
             ]
         );
@@ -90,16 +90,16 @@ class ProductsController extends Controller
             $error = $validator->errors();
             $error = [
                 'success' => false,
-                'message' => 'siteID & sku is required field.',
+                'message' => 'setupID & sku is required field.',
                 'data' => $validator->errors(),
             ];
             return response()->json($error, 400);
         }
 
-        $siteID = $request->siteID;
+        $setupID = $request->setupID;
         $sku = $request->sku;
 
-        $product = $this->productService->get($siteID, $sku);
+        $product = $this->productService->get($setupID, $sku);
         return response($product);
 
     }
@@ -110,7 +110,7 @@ class ProductsController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'siteID' => 'required|integer',
+                'setupID' => 'required|integer',
                 'sku' => 'required|string',
             ]
         );
@@ -118,21 +118,21 @@ class ProductsController extends Controller
             $error = $validator->errors();
             $error = [
                 'success' => false,
-                'message' => 'siteID & sku is required field.',
+                'message' => 'setupID & sku is required field.',
                 'data' => $validator->errors(),
             ];
             return response()->json($error, 400);
         }
 
-        $siteID = $request->siteID;
+        $setupID = $request->setupID;
         $sku = $request->sku;
 
-        $product = $this->productService->get( $siteID, $sku);
+        $product = $this->productService->get( $setupID, $sku);
         if (isset($product['error'])) {
             return response($product);
         }
         $dbVal = [
-            'siteID' => $siteID,
+            'setupID' => $setupID,
             'id' => $product['id'],
             'sku' => $product['sku'],
             'name' => $product['name'],

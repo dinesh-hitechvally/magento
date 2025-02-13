@@ -18,7 +18,7 @@ return new class extends Migration
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
 
                 $table->id('productID'); // Auto-incrementing ID
-                $table->bigInteger('siteID');
+                $table->bigInteger('setupID');
                 $table->bigInteger('id');
                 $table->string('sku');
                 $table->string('name');
@@ -39,7 +39,7 @@ return new class extends Migration
                 $table->timestamps(); // Created at and updated at
 
                 $table->index('id');
-                $table->index('siteID');
+                $table->index('setupID');
                 
             });
 

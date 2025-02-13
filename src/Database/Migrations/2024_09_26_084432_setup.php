@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
 
-    private $tableName = 'websites';
+    private $tableName = 'setup';
     /**
      * Run the migrations.
      */
@@ -17,7 +17,7 @@ return new class extends Migration
 
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
                 
-                $table->id('siteID'); // Auto-incrementing ID
+                $table->id('setupID'); // Auto-incrementing ID
                 $table->string('url');
                 $table->string('user');
                 $table->string('password');

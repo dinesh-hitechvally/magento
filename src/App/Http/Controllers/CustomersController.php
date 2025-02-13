@@ -23,18 +23,18 @@ class CustomersController extends Controller
     }
 
 
-    public function getSiteID()
+    public function getSetupID()
     {
-        $siteID = 1;
+        $setupID = 1;
 
-        return $siteID;
+        return $setupID;
 
     }
 
     public function index(Request $request)
     {
 
-        $companyID = $this->getSiteID();
+        $companyID = $this->getSetupID();
 
         $updatedCustomers = [];
         $customers = $this->customers->getAll($companyID);
@@ -110,7 +110,7 @@ class CustomersController extends Controller
     public function search(Request $request)
     {
 
-        $companyID = $this->getSiteID();
+        $companyID = $this->getSetupID();
         
         $updatedCustomers = [];
         $query = $request->all();
@@ -229,7 +229,7 @@ class CustomersController extends Controller
     public function createCustomerDetail(Request $request)
     {
         dd($request); // Create customer if needed from customers service not from controller
-        $companyID = $this->getSiteID();
+        $companyID = $this->getSetupID();
         $where = [
             'company_id' => $companyID,
             'lightSpeedPending' => 1,
@@ -471,7 +471,7 @@ class CustomersController extends Controller
 
         $debug = request()->query('debug') ?? 0;
         
-        $companyID = $this->getSiteID();
+        $companyID = $this->getSetupID();
         $where = [
             'lightSpeedPendingTags' => 1,
             'isLoyalty' => 1,

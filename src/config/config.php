@@ -3,7 +3,7 @@ return [
     "connection" => "mysql",
     "models" => [
         "magento" => [
-            "MAGENTO_WEBSITES"       => "websites",
+            "MAGENTO_SETUP"       => "setup",
             "MAGENTO_ACCESS_TOKENS"  => "access_tokens",
             "MAGENTO_REFRESH_TOKENS" => "refresh_tokens",
             "MAGENTO_CUSTOMERS"      => "customers",

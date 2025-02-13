@@ -20,7 +20,7 @@ return new class extends Migration
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
 
                 $table->id('pageID');
-                $table->integer('siteID');
+                $table->integer('setupID');
                 $table->string('endpoint');
                 $table->string('page');
 

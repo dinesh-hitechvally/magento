@@ -4,7 +4,7 @@ namespace Dinesh\Magento\App\Http\Services;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use Dinesh\Magento\App\Models\Websites;
+use Dinesh\Magento\App\Models\Setup;
 use Dinesh\Magento\App\Models\Requests;
 use Dinesh\Magento\App\Models\Pagination;
 use Dinesh\Magento\App\Models\AccessTokens;
@@ -26,38 +26,38 @@ class Magento
         return self::$instance;
     }
 
-    public function setEndPoint($siteID)
+    public function setEndPoint($setupID)
     {
-        $endPoint = Websites::where('siteID', $siteID)->pluck('url')->first();
+        $endPoint = Setup::where('setupID', $setupID)->pluck('url')->first();
         $this->endPoint = $endPoint;
     }
 
-    public function getEndPoint($siteID)
+    public function getEndPoint($setupID)
     {
-        $endPoint = Websites::where('siteID', $siteID)->pluck('url')->first();
+        $endPoint = Setup::where('setupID', $setupID)->pluck('url')->first();
         $this->endPoint = $endPoint;
     }
 
     // Generate access token using refresh token
-    public function getAccessToken( $siteID )
+    public function getAccessToken( $setupID )
     {
 
-        if(!$siteID){
-            dd('Unable to get access token without siteID.');
+        if(!$setupID){
+            dd('Unable to get access token without setupID.');
         }
 
-        $this->setEndPoint($siteID);
+        $this->setEndPoint($setupID);
 
-        $accessRow = AccessTokens::where('siteID', $siteID )
+        $accessRow = AccessTokens::where('setupID', $setupID )
             ->where('expire_at', '>=', Carbon::now())
-            ->orderBy('siteID', 'desc')
+            ->orderBy('setupID', 'desc')
             ->first();
 
         if (isset($accessRow->access_token)) {
             return $accessRow->access_token;
         }
 
-        $siteRow = Websites::where( 'siteID', $siteID )->first();
+        $siteRow = Setup::where( 'setupID', $setupID )->first();
         if(!$siteRow){
             dd('Please configure magento website first before proceeding.');
         }
@@ -82,7 +82,7 @@ class Magento
 
         // Example data to insert
         $dbVal = [
-            'siteID' => $siteID,
+            'setupID' => $setupID,
             'access_token' => $response,
             'expire_at' => Carbon::now()->addHours(23)
         ];
@@ -120,13 +120,13 @@ class Magento
 
     }
 
-    public function savePagination( $endPoint, $response, $siteID){
+    public function savePagination( $endPoint, $response, $setupID){
 
         if(!$endPoint){
             return;
         }
 
-        if (!$siteID) {
+        if (!$setupID) {
             return;
         }
 
@@ -135,7 +135,7 @@ class Magento
         $page = $current_page+1;
 
         $data = [
-            'siteID' => $siteID,
+            'setupID' => $setupID,
             'endpoint' => $endPoint,
             'page' => $page,
         ];

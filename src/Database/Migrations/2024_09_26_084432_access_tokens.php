@@ -20,7 +20,7 @@ return new class extends Migration
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
 
                 $table->id('tokenID'); // Auto-incrementing ID
-                $table->integer('siteID'); // Auto-incrementing ID
+                $table->integer('setupID'); // Auto-incrementing ID
                 $table->string('access_token');
                 $table->dateTime('expire_at'); //Expire at
                 $table->timestamps(); // Created at and updated at

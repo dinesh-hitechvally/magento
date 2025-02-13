@@ -23,10 +23,10 @@ class CustomerService extends Magento{
     }
 
     // Example: Method to get customers (Extend as needed)
-    public function getAll($siteID)
+    public function getAll($setupID)
     {
 
-        $accessToken = $this->getAccessToken($siteID);
+        $accessToken = $this->getAccessToken($setupID);
         $data = [
             'searchCriteria' => [
                 'pageSize' => 10,
@@ -35,7 +35,7 @@ class CustomerService extends Magento{
         $endPoint = "/rest/V1/customers/search";
 
         $pagination = Pagination::where([
-            'siteID' => $siteID,
+            'setupID' => $setupID,
             'endpoint' => "{$endPoint}",
         ])
         ->orderBy('created_at', 'desc')   // Order by 'created_at' in descending order

@@ -18,7 +18,7 @@ return new class extends Migration
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
 
                 $table->id('logID'); // Auto-incrementing ID
-                $table->integer('siteID')->nullable();
+                $table->integer('setupID')->nullable();
                 $table->string('name');
                 $table->timestamps(); // Created at and updated at
                 

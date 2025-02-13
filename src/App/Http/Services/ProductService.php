@@ -10,10 +10,10 @@ class ProductService extends Magento
     
 
     // Example: Method to get products (Extend as needed)
-    public function getAll($siteID)
+    public function getAll($setupID)
     {
 
-        $accessToken = $this->getAccessToken($siteID);
+        $accessToken = $this->getAccessToken($setupID);
 
         $data = [
             'searchCriteria' => [
@@ -23,7 +23,7 @@ class ProductService extends Magento
 
         $endPoint = "/rest/V1/products";  
 
-        $pagination = Pagination::where('siteID', $siteID)
+        $pagination = Pagination::where('setupID', $setupID)
             ->where('endpoint', $endPoint)
             ->orderBy('created_at', 'desc')   // Order by 'created_at' in descending site
             ->pluck('page')
@@ -37,13 +37,13 @@ class ProductService extends Magento
             $data['searchCriteria']['currentPage'] = $pagination;
         }
 
-        return $this->request('GET', $data, $headers, $endPoint, 'query', $siteID );
+        return $this->request('GET', $data, $headers, $endPoint, 'query', $setupID );
 
     }
 
-    public function get($siteID, $sku)
+    public function get($setupID, $sku)
     {
-        $accessToken = $this->getAccessToken($siteID);
+        $accessToken = $this->getAccessToken($setupID);
         $data = [];
         $endPoint = "/rest/V1/products/{$sku}";
 
@@ -54,10 +54,10 @@ class ProductService extends Magento
         return $this->request('GET', $data, $headers, $endPoint);
     }
 
-    public function update($siteID, $productID, $data)
+    public function update($setupID, $productID, $data)
     {
-        $accessToken = $this->getAccessToken($siteID);
-        $endPoint = "/companies/{$siteID}/products/{$siteID}.json";
+        $accessToken = $this->getAccessToken($setupID);
+        $endPoint = "/companies/{$setupID}/products/{$setupID}.json";
 
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token

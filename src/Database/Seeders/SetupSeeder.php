@@ -3,9 +3,9 @@
 namespace Dinesh\Magento\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Dinesh\Magento\App\Models\Websites;
+use Dinesh\Magento\App\Models\Setup;
 
-class WebsitesSeeder extends Seeder
+class SetupSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,9 +22,9 @@ class WebsitesSeeder extends Seeder
             ],
         ];
 
-        // Seed the websites table
+        // Seed the setup table
         foreach ($data as $websiteData) {
-            Websites::create($websiteData);
+            Setup::create($websiteData);
         }
     }
 }
