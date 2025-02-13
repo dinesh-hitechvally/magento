@@ -2,17 +2,11 @@
 
 namespace Dinesh\Magento\App\Models;
 
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use Retailcare\SyncBridge\Http\Services\Filter\Traits\Filterable;
-use Retailcare\SyncBridge\Http\Services\Filter\Traits\Sortable;
 
 class Customers extends Model
 {
     
-    use Filterable;
-    use Sortable;
-
     protected $table = '';
     protected $connection = '';
 
