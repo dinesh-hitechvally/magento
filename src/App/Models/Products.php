@@ -19,8 +19,4 @@ class Products extends Model
         $this->connection = config('magento.connection', 'mysql');
     }
 
-    public function sites()
-    {
-        return $this->hasMany(ProductSites::class, 'product_id', 'id');
-    }
 }

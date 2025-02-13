@@ -13,12 +13,8 @@ class Logs extends Model
     protected $primaryKey = 'logID';
 
     // Specify fillable attributes if needed
-    protected $fillable = [
-        'siteID',
-        'name',
-        'created_at',
-        'updated_at',
-    ];
+    protected $guarded = []; 
+    
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

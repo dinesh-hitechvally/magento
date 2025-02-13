@@ -1,6 +1,6 @@
 <?php
 
-namespace Dinesh\Magento\Services;
+namespace Dinesh\Magento\App\Http\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -32,23 +32,24 @@ class CustomerService extends Magento{
                 'pageSize' => 10,
             ],
         ];
-        $nextPageUrl = Cursors::where([
+        $endPoint = "/rest/V1/customers/search";
+
+        $pagination = Pagination::where([
             'siteID' => $siteID,
-            'endpoint' => 'customers',
+            'endpoint' => "{$endPoint}",
         ])
         ->orderBy('created_at', 'desc')   // Order by 'created_at' in descending order
-        ->pluck('endpoint')
+        ->pluck('page')
         ->first();
 
-        $endPoint = "/rest/V1/customers/search";
+        if ($pagination) {
+            $data['searchCriteria']['currentPage'] = $pagination;
+        }
+        
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
             'Accept' => 'application/json',
         ];
-
-        if($nextPageUrl){
-            $headers['X-Next-Page'] = $nextPageUrl;
-        }
 
         return $this->request('GET', $data, $headers, $endPoint, 'form', $companyID);
 

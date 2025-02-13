@@ -14,20 +14,8 @@ class PaymentMethod extends Model
     // If your primary key is not the default 'id', specify it
     protected $primaryKey = 'paymentID';
 
-      // Specify the attributes that are mass assignable
-    protected $fillable = [
-        'number',
-        'order_id',
-        'company_id',
-        'site_id',
-        'method_id',
-        'method_name',
-        'amount',
-        'tip',
-        'ls_created_at',
-        'ref',
-        'credit_card_surcharge',
-    ];
+    // Specify the attributes that are mass assignable
+    protected $guarded = []; 
 
     public function __construct(array $attributes = []){
 

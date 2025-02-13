@@ -12,30 +12,7 @@ class OrderLines extends Model
     protected $table = '';
     protected $connection = '';
     protected $primaryKey = 'lineID';
-    protected $fillable = [
-
-        'number',
-        'line_id',
-        'product_id',
-        'company_id',
-        'site_id',
-        'product_name',
-        'product_sku',
-        'quantity',
-        'price_variation',
-        'price_fixed_variation',
-        'notes',
-        'unit_price',
-        'unit_tax',
-        'line_total_ex_tax',
-        'line_total_tax',
-        'from_order_id',
-        'from_order_id_str',
-        'course_name',
-        'course_ordinal',
-        'course_status',
-
-    ];
+    protected $guarded = []; 
 
     public function __construct(array $attributes = [])
     {

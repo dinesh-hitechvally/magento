@@ -204,34 +204,4 @@ class Magento
         }
     }
 
-    public function isValidKountaSignature($request, $companyID)
-    {
-
-        // Retrieve the signature from the header
-        $signature = $request->header('x-kounta-signature') ?? null;
-
-        if($signature==null){
-            return false;
-        }else{
-            return true;
-        }
-
-        // Get the raw request content (payload)
-        $payload = $request->getContent();
-
-        // Retrieve the secret key based on the company ID
-        $secretKey = RefreshTokens::where('company_id', $companyID)->pluck('client_secret')->first();
-
-        // Step 1: Create the HMAC hash of the payload using the secret key
-        $calculatedSignature = hash_hmac('sha256', $payload, $secretKey);
-
-        // Step 2: Securely compare the calculated signature and the one from the header
-        if (hash_equals($calculatedSignature, $signature)) {
-            return true; // Signature is valid
-        }
-
-        return false; // Signature is invalid
-
-    }
-
 }

@@ -10,12 +10,7 @@ class AccessTokens extends Model
     protected $table = '';
     protected $connection = '';
     protected $primaryKey = 'tokenID';
-    protected $fillable = [
-        'siteID',
-        'access_token',
-        'created_at',
-        'updated_at',
-    ];
+    protected $guarded = []; 
 
     public function __construct(array $attributes = [])
     {
