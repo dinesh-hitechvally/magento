@@ -2,8 +2,10 @@
 
 namespace Dinesh\Magento\App\Http\Services;
 
-use Dinesh\Magento\App\Http\Services\Magento;
+use Dinesh\Magento\App\Models\Products;
 use Dinesh\Magento\App\Models\Pagination;
+
+use Dinesh\Magento\App\Http\Services\Magento;
 
 class ProductService extends Magento
 {
@@ -39,6 +41,40 @@ class ProductService extends Magento
 
         return $this->request('GET', $data, $headers, $endPoint, 'query', $setupID );
 
+    }
+
+    public function saveRow($setupID, $product){
+
+        $dbVal = [
+            'setupID' => $setupID,
+            'id' => $product['id'],
+            'sku' => $product['sku'],
+            'name' => $product['name'],
+            'attribute_set_id' => $product['attribute_set_id'],
+            'price' => $product['price'] ?? null,
+            'status' => $product['status'],
+            'visibility' => $product['visibility'],
+            'type_id' => $product['type_id'],
+            'm_created_at' => $product['created_at'],
+            'm_updated_at' => $product['updated_at'],
+            'extension_attributes' => json_encode($product['extension_attributes']),
+            'product_links' => json_encode($product['product_links']),
+            'options' => json_encode($product['options']),
+            'media_gallery_entries' => json_encode($product['media_gallery_entries']),
+            'tier_prices' => json_encode($product['tier_prices']),
+            'custom_attributes' => json_encode($product['custom_attributes']),
+        ];
+
+        HookFilterService::applyFilters('product_data_before_save', $dbVal, $this);
+
+        $where = [
+            'setupID' => $setupID,
+            'id' => $product['id'],
+        ];
+
+        $result = Products::updateOrCreate($where, $dbVal);
+
+        return $result;
     }
 
     public function create($setupID, $data)

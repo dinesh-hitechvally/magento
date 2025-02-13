@@ -10,12 +10,12 @@ use Dinesh\Magento\App\Http\Services\OrderService;
 
 class OrdersController extends Controller
 {
-    private $order;
+    private $orders;
 
     public function __construct()
     {
 
-        $this->order = new OrderService();
+        $this->orders = new OrderService();
     }
 
     public function getSetupID()
@@ -30,14 +30,14 @@ class OrdersController extends Controller
         $setupID = $this->getSetupID();
 
         $updatedOrders = [];
-        $orders = $this->order->getAll($setupID);
+        $orders = $this->orders->getAll($setupID);
 
         if (!isset($orders['total_count'])) {
             return response($orders);
         }
         foreach ($orders['items'] as $order) {
 
-            $result = $this->order->saveRow($setupID, $order);
+            $result = $this->orders->saveRow($setupID, $order);
             $updatedOrders[] = $result;
 
         }
@@ -71,7 +71,7 @@ class OrdersController extends Controller
         $setupID = $request->setupID;
         $sku = $request->sku;
 
-        $order = $this->order->get($setupID, $sku);
+        $order = $this->orders->get($setupID, $sku);
         return response($order);
     }
 
@@ -98,12 +98,12 @@ class OrdersController extends Controller
         $setupID = $request->setupID;
         $entityID = $request->entityID;
 
-        $order = $this->order->get($setupID, $entityID);
+        $order = $this->orders->get($setupID, $entityID);
         if (!isset($order['entity_id'])) {
             return response($order);
         }
 
-        $result = $this->order->saveRow($setupID, $order);
+        $result = $this->orders->saveRow($setupID, $order);
         $updatedOrders[] = $result;
 
         return response()->json(

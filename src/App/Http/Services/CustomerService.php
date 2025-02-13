@@ -2,8 +2,10 @@
 
 namespace Dinesh\Magento\App\Http\Services;
 
-use Dinesh\Magento\App\Http\Services\Magento;
+use Dinesh\Magento\App\Models\Customers;
 use Dinesh\Magento\App\Models\Pagination;
+
+use Dinesh\Magento\App\Http\Services\Magento;
 
 class CustomerService extends Magento{
 
@@ -49,6 +51,41 @@ class CustomerService extends Magento{
         ];
 
         return $this->request('GET', $data, $headers, $endPoint, 'query', $setupID);
+
+    }
+
+    public function saveRow($setupID, $customer)
+    {
+
+        $dbVal = [
+            'setupID' => $setupID,
+            'id' => $customer['id'],
+            'group_id' => $customer['group_id'],
+            'default_billing' => $customer['default_billing'] ?? null,
+            'default_shipping' => $customer['default_shipping'] ?? null,
+            'm_created_at' => $customer['created_at'],
+            'm_updated_at' => $customer['updated_at'],
+            'created_in' => $customer['created_in'],
+            'dob' => $customer['dob'] ?? null,
+            'email' => $customer['email'],
+            'firstname' => $customer['firstname'],
+            'lastname' => $customer['lastname'],
+            'gender' => $customer['gender'] ?? null,
+            'store_id' => $customer['store_id'],
+            'website_id' => $customer['website_id'],
+            'addresses' => json_encode($customer['addresses']),
+            'disable_auto_group_change' => $customer['disable_auto_group_change'],
+            'extension_attributes' => json_encode($customer['extension_attributes']),
+        ];
+
+        HookFilterService::applyFilters('customer_data_before_save', $dbVal, $this);
+
+        $where = [
+            'id' => $customer['id']
+        ];
+        $result = Customers::updateOrCreate($where, $dbVal);
+
+        return $result;
 
     }
 
