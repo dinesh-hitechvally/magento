@@ -110,10 +110,6 @@ abstract class Magento implements ApiInterfaceService
             'url' => $requestUrl,
             'name' => $jsonName,
             'code' => $statusCode,
-            'rate_limit' => $headers['X-Ratelimit-Limit'][0] ?? null,
-            'rate_limit_remaining' => $headers['X-Ratelimit-Remaining'][0] ?? null,
-            'rate_limit_reset' => $reset,
-            'rate_limit_resetdate' => ($reset!=null) ? Carbon::createFromTimestamp($reset)->format('Y-m-d H:i:s') : null,
         ];
 
         Requests::create($data);

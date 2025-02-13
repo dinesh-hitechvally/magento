@@ -16,15 +16,12 @@ return new class extends Migration
         if (!Schema::connection(config('magento.connection'))->hasTable($this->tableName) ){
 
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
+                
                 $table->id('requestID'); // Auto-incrementing ID
                 $table->string('method');
                 $table->string('url');
                 $table->string('name');
                 $table->integer('code');
-                $table->integer('rate_limit')->nullable();
-                $table->integer('rate_limit_remaining')->nullable();
-                $table->bigInteger('rate_limit_reset')->nullable();
-                $table->dateTime('rate_limit_resetdate')->nullable();
 
                 /*
                  * Timestamps
