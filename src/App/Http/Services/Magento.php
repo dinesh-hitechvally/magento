@@ -49,7 +49,7 @@ class Magento
         $this->setEndPoint($siteID);
 
         $accessRow = AccessTokens::where('siteID', $siteID )
-            ->where('expire_at', '>=', Carbon::now()->addHours(23))
+            ->where('expire_at', '>=', Carbon::now())
             ->orderBy('siteID', 'desc')
             ->first();
 
@@ -84,6 +84,7 @@ class Magento
         $dbVal = [
             'siteID' => $siteID,
             'access_token' => $response,
+            'expire_at' => Carbon::now()->addHours(23)
         ];
 
         // Create a new AccessTokens instance and save it

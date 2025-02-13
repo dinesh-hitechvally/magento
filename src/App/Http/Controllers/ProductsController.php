@@ -46,7 +46,7 @@ class ProductsController extends Controller
                 'sku' => $product['sku'],
                 'name' => $product['name'],
                 'attribute_set_id' => $product['attribute_set_id'],
-                'price' => $product['price'],
+                'price' => $product['price'] ?? 0,
                 'status' => $product['status'],
                 'visibility' => $product['visibility'],
                 'type_id' => $product['type_id'],
