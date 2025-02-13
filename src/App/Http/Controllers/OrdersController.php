@@ -55,23 +55,23 @@ class OrdersController extends Controller
             $request->all(),
             [
                 'setupID' => 'required|integer',
-                'sku' => 'required|string',
+                'entityID' => 'required|string',
             ]
         );
         if ($validator->fails()) {
             $error = $validator->errors();
             $error = [
                 'success' => false,
-                'message' => 'setupID & sku is required field.',
+                'message' => 'setupID & entityID is required field.',
                 'data' => $validator->errors(),
             ];
             return response()->json($error, 400);
         }
 
         $setupID = $request->setupID;
-        $sku = $request->sku;
+        $entityID = $request->entityID;
 
-        $order = $this->orders->get($setupID, $sku);
+        $order = $this->orders->get($setupID, $entityID);
         return response($order);
     }
 
