@@ -149,6 +149,10 @@ class OrderService extends Magento{
 
     }
 
+    public function saveLineItems($setupID, $order){
+
+    }
+
     public function create( $setupID, $data )
     {
         $accessToken = $this->getAccessToken($setupID);
