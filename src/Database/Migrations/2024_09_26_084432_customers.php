@@ -17,27 +17,27 @@ return new class extends Migration
         if (!Schema::connection(config('magento.connection'))->hasTable($this->tableName)) {
 
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
-                $table->id('customerID'); // Auto-incrementing ID
+                $table->id('customerID'); 
                 $table->bigInteger('setupID');
                 $table->integer('id');
                 $table->integer('group_id');
                 $table->integer('default_billing')->nullable();
                 $table->integer('default_shipping')->nullable();
-                $table->dateTime('m_created_at'); // Email
-                $table->dateTime('m_updated_at'); // Primary email address
-                $table->string('created_in'); // Primary address
+                $table->dateTime('m_created_at'); 
+                $table->dateTime('m_updated_at'); 
+                $table->string('created_in'); 
                 $table->date('dob')->nullable();
-                $table->string('email'); // State
-                $table->string('firstname'); // Postal code
-                $table->string('lastname'); // Country
-                $table->integer('gender'); // Primary address
-                $table->integer('store_id'); // City
-                $table->integer('website_id'); // State
-                $table->json('addresses'); // Postal code
-                $table->integer('disable_auto_group_change'); // Country
-                $table->json('extension_attributes'); // Phone number
+                $table->string('email'); 
+                $table->string('firstname');
+                $table->string('lastname'); 
+                $table->integer('gender')->nullable();
+                $table->integer('store_id'); 
+                $table->integer('website_id'); 
+                $table->json('addresses'); 
+                $table->integer('disable_auto_group_change'); 
+                $table->json('extension_attributes'); 
 
-                $table->timestamps(); // Created at and updated at
+                $table->timestamps(); 
 
                 $table->index('id');
                 $table->index('setupID');

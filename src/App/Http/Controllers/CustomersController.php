@@ -56,7 +56,7 @@ class CustomersController extends Controller
                 'email' => $customer['email'],
                 'firstname' => $customer['firstname'],
                 'lastname' => $customer['lastname'],
-                'gender' => $customer['gender'] ?? 0,
+                'gender' => $customer['gender'] ?? null,
                 'store_id' => $customer['store_id'],
                 'website_id' => $customer['website_id'],
                 'addresses' => json_encode($customer['addresses']),
