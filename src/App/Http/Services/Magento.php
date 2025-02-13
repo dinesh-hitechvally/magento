@@ -48,7 +48,10 @@ class Magento
 
         $this->setEndPoint($siteID);
 
-        $accessRow = AccessTokens::where('siteID', $siteID )->orderBy('siteID', 'desc')->first();
+        $accessRow = AccessTokens::where('siteID', $siteID )
+            ->where('expire_at', '>=', Carbon::now()->addHours(23))
+            ->orderBy('siteID', 'desc')
+            ->first();
 
         if (isset($accessRow->access_token)) {
             return $accessRow->access_token;

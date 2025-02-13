@@ -6,10 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use Dinesh\Magento\Services\CustomerService;
-use Dinesh\Magento\App\Models\Customers;
-use Dinesh\Magento\App\Models\Logs;
 
+use Dinesh\Magento\App\Models\Customers;
+
+use Dinesh\Magento\App\Http\Services\CustomerService;
 
 class CustomersController extends Controller
 {
@@ -19,6 +19,7 @@ class CustomersController extends Controller
     {
         
         $this->customers =  CustomerService::getInstance();
+
     }
 
 
@@ -74,6 +75,7 @@ class CustomersController extends Controller
             'message' => 'Customers updated or created successfully.',
             'data' => $updatedCustomers
         ], 200);
+
     }
 
     public function live(Request $request)
@@ -182,9 +184,6 @@ class CustomersController extends Controller
             return response($customer);
         }
 
-        $dateOfBirth = $this->customers->getDateOfBirth($customer['tags']);
-        $lightCardMemberID = $this->customers->getLightCardMemberID($customer['tags']);
-
         $dbVal = [
             'id' => $customer['id'],
             'company_id' => $companyID,
@@ -204,54 +203,17 @@ class CustomersController extends Controller
             'accepts_marketing' => $customer['accepts_marketing'],
             'ls_created_at' => Carbon::parse($customer['created_at'])->format('Y-m-d H:i:s'),
             'ls_updated_at' => Carbon::parse($customer['updated_at'])->format('Y-m-d H:i:s'),
-            'dob' => $dateOfBirth,
             'detail_pending' => 0,
             
         ];
 
-        if($lightCardMemberID!=null){
-            $dbVal['litecard_member_id'] = $lightCardMemberID;
-            $dbVal['liteCardPending'] = 0; //If lightmember exist disable pending flag
-        }
 
         $where = [
             'id' => $customer['id']
         ];
 
-        $topic = $request->topic ?? null;
-        $isLoyaltyEmail = $this->customers->isLoyaltiEmail($customer['email']);
-        if ($topic == "customers/created" && $isLoyaltyEmail==true ) {
-            //update db if this function called via webhook
-            $isLoyalty = 1;
-            $dbVal['isLoyalty'] = $isLoyalty;
-            $dbVal['liteCardPending'] = 1;  //If customer created for the first time then enable it.           
-            $dbVal['klaviyoListProfileCreatePending'] = 1;
-        }else{
-            $custRow = Customers::where($where)->first();
-            $isLoyalty = $custRow->isLoyalty ?? null;
-            if($isLoyalty!=null){
-                $customer['isLoyalty'] = $isLoyalty; //for synccare customer update
-            }
-        }
-       
-        if($isLoyalty !=1 ){  
-            $dbVal['liteCardPending'] = 0; //lightcard pending flag enable only for isLoyalty fag 1
-        }
 
         $result = Customers::updateOrCreate($where, $dbVal);
-
-        $syncCareCustomer = [
-            'id' => $customer['id'],
-            'dob' => $dateOfBirth,
-            'isLoyalty' => $isLoyalty,
-            'email' => $customer['email'],
-            "phone" => $customer['phone'],
-            "first_name" => $customer['first_name'],
-            "last_name" => $customer['last_name'],
-        ];
-        $this->pushToSyncCare($syncCareCustomer);
-
-        $this->maintainKlaviyoPendingFlag($customer['id']);
 
         $updatedCustomers[] = $result;
         return response()->json(
@@ -422,19 +384,6 @@ class CustomersController extends Controller
         $customer->detail_pending = 1;
         $customer->save();
 
-        $syncCareCustomer = [
-            'id' => $customer->id,
-            'dob' => $customer->dob,
-            'isLoyalty' => $customer->isLoyalty,
-            'email' => $customer->email,
-            "phone" => $customer->phone,
-            "first_name" => $customer->first_name,
-            "last_name" => $customer->last_name,
-        ];
-        $this->pushToSyncCare($syncCareCustomer);
-
-        $this->maintainKlaviyoPendingFlag($customer['id']);
-        
         return response()->json($response, 200);
 
     }
@@ -477,9 +426,6 @@ class CustomersController extends Controller
                 continue;
             }
 
-            $dateOfBirth = $this->customers->getDateOfBirth($customer['tags']);
-            $lightCardMemberID = $this->customers->getLightCardMemberID($customer['tags']);
-
             $dbVal = [
                 'id' => $customer['id'],
                 'company_id' => $companyID,
@@ -499,32 +445,13 @@ class CustomersController extends Controller
                 'accepts_marketing' => $customer['accepts_marketing'],
                 'ls_created_at' => Carbon::parse($customer['created_at'])->format('Y-m-d H:i:s'),
                 'ls_updated_at' => Carbon::parse($customer['updated_at'])->format('Y-m-d H:i:s'),
-                'dob' => $dateOfBirth,
                 'detail_pending' => 0,
             ];
-
-            if($lightCardMemberID!=null){
-                $dbVal['litecard_member_id'] = $lightCardMemberID;
-                $dbVal['liteCardPending'] = 0;
-            }
 
             $where = [
                 'id' => $customer['id']
             ];
             $result = Customers::updateOrCreate($where, $dbVal);
-
-            $syncCareCustomer = [
-                'id' => $customer['id'],
-                'dob' => $dateOfBirth,
-                'isLoyalty' => $isLoyalty,
-                'email' => $customer['email'],
-                "phone" => $customer['phone'],
-                "first_name" => $customer['first_name'],
-                "last_name" => $customer['last_name'],
-            ];
-            $this->pushToSyncCare($syncCareCustomer);
-
-            $this->maintainKlaviyoPendingFlag($customer['id']);
 
             $updatedCustomers[] = $result;
             
@@ -584,6 +511,8 @@ class CustomersController extends Controller
                 $customer->save();
             }
         }
+
         return response()->json($response, 200);
+
     }
 }

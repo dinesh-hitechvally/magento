@@ -22,7 +22,7 @@ return new class extends Migration
                 $table->id('tokenID'); // Auto-incrementing ID
                 $table->integer('siteID'); // Auto-incrementing ID
                 $table->string('access_token');
-                $table->dateTime('expire_at');
+                $table->dateTime('expire_at'); //Expire at
                 $table->timestamps(); // Created at and updated at
 
             });
