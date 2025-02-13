@@ -73,6 +73,7 @@ class OrdersController extends Controller
 
         $order = $this->orders->get($setupID, $entityID);
         return response($order);
+        
     }
 
     public function get(Request $request)
