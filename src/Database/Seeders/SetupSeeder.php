@@ -18,7 +18,7 @@ class SetupSeeder extends Seeder
             [
                 'url' => 'http://localhost/magento2/pub/',
                 'user' => 'admin',
-                'password' => 'admin123',
+                'password' => 'admin1234',
             ],
         ];
 

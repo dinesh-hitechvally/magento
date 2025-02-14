@@ -3,7 +3,9 @@
 namespace Dinesh\Magento\App\Http\Services;
 
 use Dinesh\Magento\App\Models\Orders;
+use Dinesh\Magento\App\Models\OrderLines;
 use Dinesh\Magento\App\Models\Pagination;
+use Dinesh\Magento\App\Models\OrderBillingAddress;
 
 use Dinesh\Magento\App\Http\Services\Magento;
 
@@ -149,7 +151,117 @@ class OrderService extends Magento{
 
     }
 
-    public function saveLineItems($setupID, $order){
+    public function saveOrderLines($setupID, $order){
+
+        $results = [];
+        foreach( $order['items'] as $lineItem){
+            
+            $dbVal = [
+                'setupID' => $setupID,
+                'store_id' => $lineItem['store_id'],
+                'order_id' => $lineItem['order_id'],
+                'item_id' => $lineItem['item_id'],
+                'product_id' => $lineItem['product_id'],
+                'sku' => $lineItem['sku'],
+                'amount_refunded' => $lineItem['amount_refunded'],
+                'applied_rule_ids' => $lineItem['applied_rule_ids'],
+                'base_amount_refunded' => $lineItem['base_amount_refunded'],
+                'base_discount_amount' => $lineItem['base_discount_amount'],
+                'base_discount_invoiced' => $lineItem['base_discount_invoiced'],
+                'base_discount_tax_compensation_amount' => $lineItem['base_discount_tax_compensation_amount'],
+                'base_discount_tax_compensation_invoiced' => $lineItem['base_discount_tax_compensation_invoiced'],
+                'base_original_price' => $lineItem['base_original_price'],
+                'base_price' => $lineItem['base_price'],
+                'base_price_incl_tax' => $lineItem['base_price_incl_tax'],
+                'base_row_invoiced' => $lineItem['base_row_invoiced'],
+                'base_row_total' => $lineItem['base_row_total'],
+                'base_row_total_incl_tax' => $lineItem['base_row_total_incl_tax'],
+                'base_tax_amount' => $lineItem['base_tax_amount'],
+                'base_tax_invoiced' => $lineItem['base_tax_invoiced'],
+                'm_created_at' => $lineItem['created_at'],
+                'discount_amount' => $lineItem['discount_amount'],
+                'discount_invoiced' => $lineItem['discount_invoiced'],
+                'discount_percent' => $lineItem['discount_percent'],
+                'free_shipping' => $lineItem['free_shipping'],
+                'discount_tax_compensation_amount' => $lineItem['discount_tax_compensation_amount'],
+                'discount_tax_compensation_invoiced' => $lineItem['discount_tax_compensation_invoiced'],
+                'is_qty_decimal' => $lineItem['is_qty_decimal'],
+                'name' => $lineItem['name'],
+                'no_discount' => $lineItem['no_discount'],
+                
+                'original_price' => $lineItem['original_price'],
+                'price' => $lineItem['price'],
+                'price_incl_tax' => $lineItem['price_incl_tax'],
+                'product_type' => $lineItem['product_type'],
+                'qty_canceled' => $lineItem['qty_canceled'],
+                'qty_invoiced' => $lineItem['qty_invoiced'],
+                'qty_ordered' => $lineItem['qty_ordered'],
+                'qty_refunded' => $lineItem['qty_refunded'],
+                'qty_shipped' => $lineItem['qty_shipped'],
+                'row_invoiced' => $lineItem['row_invoiced'],
+                'row_total' => $lineItem['row_total'],
+                'row_total_incl_tax' => $lineItem['row_total_incl_tax'],
+                'row_weight' => $lineItem['row_weight'],
+                'tax_amount' => $lineItem['tax_amount'],
+                'tax_invoiced' => $lineItem['tax_invoiced'],
+                'tax_percent' => $lineItem['tax_percent'],
+                'm_updated_at' => $lineItem['updated_at'],
+                'weight' => $lineItem['weight'],
+                'product_option' => json_encode($lineItem['product_option']),
+                'extension_attributes' => json_encode($lineItem['extension_attributes']),
+            ];
+
+            HookFilterService::applyFilters('order_line_data_before_save', $dbVal, $this);
+
+            $where = [
+                'setupID' => $setupID,
+                'order_id' => $lineItem['order_id'],
+                'store_id' => $lineItem['store_id'],
+                'item_id' => $lineItem['item_id'],
+                'product_id' => $lineItem['product_id'],
+            ];
+
+            $results[] = OrderLines::updateOrCreate($where, $dbVal);
+
+        }
+
+        return $results;
+
+    }
+
+    public function saveBillingAddress($setupID, $order){
+
+        $address = $order['billing_address'];
+
+        $dbVal = [
+            'setupID' => $setupID,
+            'entity_id' => $address['entity_id'],
+            'address_type' => $address['address_type'],
+            'city' => $address['city'],
+            'country_id' => $address['country_id'],
+            'customer_address_id' => $address['customer_address_id'],
+            'email' => $address['email'],
+            'firstname' => $address['firstname'],
+            'lastname' => $address['lastname'],
+            'parent_id' => $address['parent_id'],
+            'postcode' => $address['postcode'],
+            'region' => $address['region'],
+            'region_code' => $address['region_code'],
+            'region_id' => $address['region_id'],
+            'street' => json_encode($address['street']),
+            'telephone' => $address['telephone'],
+        ];
+
+        HookFilterService::applyFilters('order_billing_address_data_before_save', $dbVal, $this);
+
+        $where = [
+            'setupID' => $setupID,
+            'entity_id' => $address['entity_id']
+        ];
+
+        $result = OrderBillingAddress::updateOrCreate($where, $dbVal);
+
+        return $result;
 
     }
 

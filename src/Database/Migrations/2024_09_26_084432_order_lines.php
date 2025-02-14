@@ -20,26 +20,26 @@ return new class extends Migration
             Schema::connection(config('magento.connection'))->create($this->tableName, function (Blueprint $table) {
 
                 $table->id('lineID');
-                $table->bigInteger('setupID');
-                $table->bigInteger('store_id');
-                $table->bigInteger('item_id');
-                $table->bigInteger('product_id');
+                $table->integer('setupID');
+                $table->smallInteger('store_id');
+                $table->integer('item_id');
+                $table->integer('product_id');
                 $table->string('sku');
                 $table->decimal('amount_refunded');
-                $table->bigInteger('applied_rule_ids');
-                $table->decimal('base_amount_refunded');
-                $table->decimal('base_discount_amount');
-                $table->decimal('base_discount_invoiced');
-                $table->decimal('base_discount_tax_compensation_amount');
-                $table->decimal('base_discount_tax_compensation_invoiced');
-                $table->decimal('base_original_price');
-                $table->decimal('base_price');
-                $table->decimal('base_price_incl_tax');
-                $table->decimal('base_row_invoiced');
-                $table->decimal('base_row_total');
-                $table->decimal('base_row_total_incl_tax');
-                $table->decimal('base_tax_amount');
-                $table->decimal('base_tax_invoiced');
+                $table->integer('applied_rule_ids');
+                $table->decimal('base_amount_refunded', 20, 4);
+                $table->decimal('base_discount_amount', 20, 4);
+                $table->decimal('base_discount_invoiced', 20, 4);
+                $table->decimal('base_discount_tax_compensation_amount', 20, 4);
+                $table->decimal('base_discount_tax_compensation_invoiced', 20, 4);
+                $table->decimal('base_original_price', 20, 4);
+                $table->decimal('base_price', 20, 4);
+                $table->decimal('base_price_incl_tax', 20, 4);
+                $table->decimal('base_row_invoiced', 20, 4);
+                $table->decimal('base_row_total', 20, 4);
+                $table->decimal('base_row_total_incl_tax', 20, 4);
+                $table->decimal('base_tax_amount', 20, 4);
+                $table->decimal('base_tax_invoiced', 20, 4);
                 $table->dateTime('m_created_at');
                 $table->decimal('discount_amount');
                 $table->decimal('discount_invoiced');
@@ -47,19 +47,19 @@ return new class extends Migration
                 $table->tinyInteger('free_shipping');
                 $table->decimal('discount_tax_compensation_amount');
                 $table->decimal('discount_tax_compensation_invoiced');
-                $table->tinyInteger('is_qty_decimal');
+                $table->smallInteger('is_qty_decimal');
                 $table->string('name');
-                $table->tinyInteger('no_discount');
-                $table->bigInteger('order_id');
+                $table->smallInteger('no_discount');
+                $table->integer('order_id');
                 $table->decimal('original_price');
                 $table->decimal('price');
                 $table->decimal('price_incl_tax');
                 $table->string('product_type');
-                $table->tinyInteger('qty_canceled');
-                $table->tinyInteger('qty_invoiced');
-                $table->tinyInteger('qty_ordered');
-                $table->tinyInteger('qty_refunded');
-                $table->tinyInteger('qty_shipped');
+                $table->decimal('qty_canceled', 12, 4);
+                $table->decimal('qty_invoiced', 12, 4);
+                $table->decimal('qty_ordered', 10, 4);
+                $table->decimal('qty_refunded', 10, 4);
+                $table->decimal('qty_shipped', 10, 4);
                 $table->decimal('row_invoiced');
                 $table->decimal('row_total');
                 $table->decimal('row_total_incl_tax');
@@ -68,7 +68,7 @@ return new class extends Migration
                 $table->decimal('tax_invoiced');
                 $table->decimal('tax_percent');
                 $table->dateTime('m_updated_at');
-                $table->decimal('weight');
+                $table->decimal('weight', 12, 4);
                 $table->json('product_option');
                 $table->json('extension_attributes');
 
@@ -89,6 +89,7 @@ return new class extends Migration
                 /*
                  * Foreign Keys
                  */
+                /*
                 $table->foreign('setupID')
                     ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
                     ->on('setup') // The related table
@@ -103,7 +104,7 @@ return new class extends Migration
                     ->references('id') // Reference to the 'id' column in the 'products' table
                     ->on('products') // The related table
                     ->onDelete('cascade'); // Action on deletion (optional, can be changed)
-
+                */
             });
 
         }

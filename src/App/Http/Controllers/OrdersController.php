@@ -38,6 +38,11 @@ class OrdersController extends Controller
         foreach ($orders['items'] as $order) {
 
             $result = $this->orders->saveRow($setupID, $order);
+
+            $this->orders->saveOrderLines($setupID, $order);
+
+            $this->orders->saveBillingAddress($setupID, $order);
+
             $updatedOrders[] = $result;
 
         }
@@ -105,6 +110,11 @@ class OrdersController extends Controller
         }
 
         $result = $this->orders->saveRow($setupID, $order);
+
+        $this->orders->saveOrderLines($setupID, $order);
+
+        $this->orders->saveBillingAddress($setupID, $order);
+        
         $updatedOrders[] = $result;
 
         return response()->json(

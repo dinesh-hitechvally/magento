@@ -37,11 +37,12 @@ return new class extends Migration
                 /*
                  * Foreign Keys
                  */
+                /*
                 $table->foreign('setupID')
                     ->references('setupID') // Reference to the 'setupID' column in the 'setup' table
                     ->on('setup') // The related table
                     ->onDelete('cascade'); // Action on deletion (optional, can be changed)
-
+                */
             });
         }
     }
