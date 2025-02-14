@@ -9,6 +9,7 @@ return [
             "MAGENTO_PAGINATION"            => "pagination",
             "MAGENTO_ORDERS"                => "orders",
             "MAGENTO_ORDER_LINES"           => "order_lines",
+            "MAGENTO_ORDER_PAYMENT"         => "order_payment",
             "MAGENTO_ORDER_BILLING_ADDRESS" => "order_billing_address",
             "MAGENTO_PRODUCTS"              => "products",
             "MAGENTO_LOGS"                  => "logs",
