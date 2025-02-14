@@ -23,15 +23,15 @@ return new class extends Migration
                 $table->string('address_type');
                 $table->string('city');
                 $table->string('country_id');
-                $table->integer('customer_address_id');
+                $table->integer('customer_address_id')->nullable();
                 $table->string('email');
                 $table->string('firstname');
                 $table->string('lastname');
                 $table->integer('parent_id');
                 $table->string('postcode');
-                $table->string('region');
-                $table->string('region_code');
-                $table->integer('region_id');
+                $table->string('region')->nullable();
+                $table->string('region_code')->nullable();
+                $table->integer('region_id')->nullable();
                 $table->json('street');
                 $table->string('telephone');
 

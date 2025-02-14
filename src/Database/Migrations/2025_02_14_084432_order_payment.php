@@ -23,20 +23,20 @@ return new class extends Migration
                 $table->string('account_status')->nullable();
                 $table->json('additional_information');
                 $table->decimal('amount_ordered', 20, 4);
-                $table->decimal('amount_paid', 20, 4);
-                $table->decimal('amount_refunded', 20, 4);
+                $table->decimal('amount_paid', 20, 4)->nullable();
+                $table->decimal('amount_refunded', 20, 4)->nullable();
                 $table->decimal('base_amount_ordered', 20, 4);
-                $table->decimal('base_amount_paid', 20, 4);
-                $table->decimal('base_amount_refunded', 20, 4);
+                $table->decimal('base_amount_paid', 20, 4)->nullable();
+                $table->decimal('base_amount_refunded', 20, 4)->nullable();
                 $table->decimal('base_shipping_amount', 20, 4);
-                $table->decimal('base_shipping_captured', 20, 4);
-                $table->decimal('base_shipping_refunded', 20, 4);
+                $table->decimal('base_shipping_captured', 20, 4)->nullable();
+                $table->decimal('base_shipping_refunded', 20, 4)->nullable();
                 $table->string('cc_last4')->nullable();
                 $table->string('method');
                 $table->integer('parent_id');
                 $table->decimal('shipping_amount', 20, 4);
-                $table->integer('shipping_captured');
-                $table->integer('shipping_refunded');
+                $table->integer('shipping_captured')->nullable();
+                $table->integer('shipping_refunded')->nullable();
 
                 /*
                  * Timestamps

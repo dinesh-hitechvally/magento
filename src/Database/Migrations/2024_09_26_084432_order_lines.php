@@ -26,15 +26,15 @@ return new class extends Migration
                 $table->integer('product_id');
                 $table->string('sku');
                 $table->decimal('amount_refunded');
-                $table->integer('applied_rule_ids');
+                $table->integer('applied_rule_ids')->nullable();
                 $table->decimal('base_amount_refunded', 20, 4);
                 $table->decimal('base_discount_amount', 20, 4);
                 $table->decimal('base_discount_invoiced', 20, 4);
-                $table->decimal('base_discount_tax_compensation_amount', 20, 4);
-                $table->decimal('base_discount_tax_compensation_invoiced', 20, 4);
-                $table->decimal('base_original_price', 20, 4);
+                $table->decimal('base_discount_tax_compensation_amount', 20, 4)->nullable();
+                $table->decimal('base_discount_tax_compensation_invoiced', 20, 4)->nullable();
+                $table->decimal('base_original_price', 20, 4)->nullable();
                 $table->decimal('base_price', 20, 4);
-                $table->decimal('base_price_incl_tax', 20, 4);
+                $table->decimal('base_price_incl_tax', 20, 4)->nullable();
                 $table->decimal('base_row_invoiced', 20, 4);
                 $table->decimal('base_row_total', 20, 4);
                 $table->decimal('base_row_total_incl_tax', 20, 4);
@@ -45,15 +45,15 @@ return new class extends Migration
                 $table->decimal('discount_invoiced');
                 $table->decimal('discount_percent');
                 $table->tinyInteger('free_shipping');
-                $table->decimal('discount_tax_compensation_amount');
-                $table->decimal('discount_tax_compensation_invoiced');
+                $table->decimal('discount_tax_compensation_amount')->nullable();
+                $table->decimal('discount_tax_compensation_invoiced')->nullable();
                 $table->smallInteger('is_qty_decimal');
                 $table->string('name');
                 $table->smallInteger('no_discount');
                 $table->integer('order_id');
                 $table->decimal('original_price');
                 $table->decimal('price');
-                $table->decimal('price_incl_tax');
+                $table->decimal('price_incl_tax')->nullable();
                 $table->string('product_type');
                 $table->decimal('qty_canceled', 12, 4);
                 $table->decimal('qty_invoiced', 12, 4);
@@ -69,7 +69,7 @@ return new class extends Migration
                 $table->decimal('tax_percent');
                 $table->dateTime('m_updated_at');
                 $table->decimal('weight', 12, 4);
-                $table->json('product_option');
+                $table->json('product_option')->nullable();
                 $table->json('extension_attributes');
 
                 /*

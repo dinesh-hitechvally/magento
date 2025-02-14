@@ -4,13 +4,13 @@ namespace Dinesh\Magento\App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Orders extends Model
+class OrderPayment extends Model
 {
 
     protected $table = '';
     protected $connection = '';
 
-    protected $primaryKey = 'orderID';
+    protected $primaryKey = 'paymentID';
     protected $guarded = [];
 
     public function __construct(array $attributes = [])

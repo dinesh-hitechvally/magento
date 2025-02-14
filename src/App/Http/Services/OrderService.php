@@ -155,15 +155,15 @@ class OrderService extends Magento
                 'product_id' => $lineItem['product_id'],
                 'sku' => $lineItem['sku'],
                 'amount_refunded' => $lineItem['amount_refunded'],
-                'applied_rule_ids' => $lineItem['applied_rule_ids'],
+                'applied_rule_ids' => $lineItem['applied_rule_ids'] ?? null,
                 'base_amount_refunded' => $lineItem['base_amount_refunded'],
                 'base_discount_amount' => $lineItem['base_discount_amount'],
                 'base_discount_invoiced' => $lineItem['base_discount_invoiced'],
-                'base_discount_tax_compensation_amount' => $lineItem['base_discount_tax_compensation_amount'],
-                'base_discount_tax_compensation_invoiced' => $lineItem['base_discount_tax_compensation_invoiced'],
-                'base_original_price' => $lineItem['base_original_price'],
+                'base_discount_tax_compensation_amount' => $lineItem['base_discount_tax_compensation_amount'] ?? null,
+                'base_discount_tax_compensation_invoiced' => $lineItem['base_discount_tax_compensation_invoiced'] ?? null,
+                'base_original_price' => $lineItem['base_original_price'] ?? null,
                 'base_price' => $lineItem['base_price'],
-                'base_price_incl_tax' => $lineItem['base_price_incl_tax'],
+                'base_price_incl_tax' => $lineItem['base_price_incl_tax'] ?? null,
                 'base_row_invoiced' => $lineItem['base_row_invoiced'],
                 'base_row_total' => $lineItem['base_row_total'],
                 'base_row_total_incl_tax' => $lineItem['base_row_total_incl_tax'],
@@ -174,15 +174,15 @@ class OrderService extends Magento
                 'discount_invoiced' => $lineItem['discount_invoiced'],
                 'discount_percent' => $lineItem['discount_percent'],
                 'free_shipping' => $lineItem['free_shipping'],
-                'discount_tax_compensation_amount' => $lineItem['discount_tax_compensation_amount'],
-                'discount_tax_compensation_invoiced' => $lineItem['discount_tax_compensation_invoiced'],
+                'discount_tax_compensation_amount' => $lineItem['discount_tax_compensation_amount'] ?? null,
+                'discount_tax_compensation_invoiced' => $lineItem['discount_tax_compensation_invoiced'] ?? null,
                 'is_qty_decimal' => $lineItem['is_qty_decimal'],
                 'name' => $lineItem['name'],
                 'no_discount' => $lineItem['no_discount'],
 
                 'original_price' => $lineItem['original_price'],
                 'price' => $lineItem['price'],
-                'price_incl_tax' => $lineItem['price_incl_tax'],
+                'price_incl_tax' => $lineItem['price_incl_tax'] ?? null,
                 'product_type' => $lineItem['product_type'],
                 'qty_canceled' => $lineItem['qty_canceled'],
                 'qty_invoiced' => $lineItem['qty_invoiced'],
@@ -198,7 +198,7 @@ class OrderService extends Magento
                 'tax_percent' => $lineItem['tax_percent'],
                 'm_updated_at' => $lineItem['updated_at'],
                 'weight' => $lineItem['weight'],
-                'product_option' => json_encode($lineItem['product_option']),
+                'product_option' => isset($lineItem['product_option']) ? json_encode($lineItem['product_option']) : null,
                 'extension_attributes' => json_encode($lineItem['extension_attributes']),
             ];
 
@@ -229,15 +229,15 @@ class OrderService extends Magento
             'address_type' => $address['address_type'],
             'city' => $address['city'],
             'country_id' => $address['country_id'],
-            'customer_address_id' => $address['customer_address_id'],
+            'customer_address_id' => $address['customer_address_id'] ?? null,
             'email' => $address['email'],
             'firstname' => $address['firstname'],
             'lastname' => $address['lastname'],
             'parent_id' => $address['parent_id'],
             'postcode' => $address['postcode'],
-            'region' => $address['region'],
-            'region_code' => $address['region_code'],
-            'region_id' => $address['region_id'],
+            'region' => $address['region'] ?? null,
+            'region_code' => $address['region_code'] ?? null,
+            'region_id' => $address['region_id'] ?? null,
             'street' => json_encode($address['street']),
             'telephone' => $address['telephone'],
         ];
@@ -265,20 +265,20 @@ class OrderService extends Magento
             'account_status' => $payment['account_status'],
             'additional_information' => json_encode($payment['additional_information']),
             'amount_ordered' => $payment['amount_ordered'],
-            'amount_paid' => $payment['amount_paid'],
-            'amount_refunded' => $payment['amount_refunded'],
+            'amount_paid' => $payment['amount_paid'] ?? null,
+            'amount_refunded' => $payment['amount_refunded'] ?? null,
             'base_amount_ordered' => $payment['base_amount_ordered'],
-            'base_amount_paid' => $payment['base_amount_paid'],
-            'base_amount_refunded' => $payment['base_amount_refunded'],
+            'base_amount_paid' => $payment['base_amount_paid'] ?? null,
+            'base_amount_refunded' => $payment['base_amount_refunded'] ?? null,
             'base_shipping_amount' => $payment['base_shipping_amount'],
-            'base_shipping_captured' => $payment['base_shipping_captured'],
-            'base_shipping_refunded' => $payment['base_shipping_refunded'],
+            'base_shipping_captured' => $payment['base_shipping_captured'] ?? null,
+            'base_shipping_refunded' => $payment['base_shipping_refunded'] ?? null,
             'cc_last4' => $payment['cc_last4'],
             'method' => $payment['method'],
             'parent_id' => $payment['parent_id'],
             'shipping_amount' => $payment['shipping_amount'],
-            'shipping_captured' => $payment['shipping_captured'],
-            'shipping_refunded' => $payment['shipping_refunded'],
+            'shipping_captured' => $payment['shipping_captured'] ?? null,
+            'shipping_refunded' => $payment['shipping_refunded'] ?? null,
         ];
 
         HookFilterService::applyFilters('order_payment_data_before_save', $dbVal, $this);
@@ -288,7 +288,7 @@ class OrderService extends Magento
             'entity_id' => $payment['entity_id']
         ];
 
-        $result = OrderBillingAddress::updateOrCreate($where, $dbVal);
+        $result = OrderPayment::updateOrCreate($where, $dbVal);
 
         return $result;
     }
