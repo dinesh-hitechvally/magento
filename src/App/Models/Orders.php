@@ -15,9 +15,10 @@ class Orders extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        // Set the table name dynamically from the config
+
         $this->table = config('magento.models.magento.MAGENTO_ORDERS');
         $this->connection = config('magento.connection', 'mysql');
+
     }
 
     public function customer()
@@ -27,8 +28,16 @@ class Orders extends Model
 
     public function lines()
     {
-        return $this->hasMany(OrderLines::class, 'from_order_id', 'id')
-            ->where('isDeleted', 0);
+        return $this->hasMany(OrderLines::class, 'order_id', 'entity_id');
+    }
+
+    public function payment(){
+        return $this->hasOne(OrderPayment::class, 'entity_id', 'entity_id');
+    }
+
+    public function billingAddress()
+    {
+        return $this->hasOne(OrderBillingAddress::class, 'entity_id', 'entity_id');
     }
 
 }

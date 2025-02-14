@@ -21,6 +21,10 @@ class Customers extends Model
         $this->table = config('magento.models.magento.MAGENTO_CUSTOMERS');
         $this->connection = config('magento.connection', 'mysql');
     }
-    
-    
+
+    public function orders()
+    {
+        return $this->hasOne(Orders::class, 'customer_id', 'id');
+    }
+
 }
