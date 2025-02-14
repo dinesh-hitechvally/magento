@@ -9,18 +9,6 @@ use Dinesh\Magento\App\Http\Services\Magento;
 
 class CustomerService extends Magento{
 
-    private static $instance = null;
-
-    // Method to get the single instance of the class (Singleton Pattern)
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new CustomerService();
-        }
-
-        return self::$instance;
-    }
-
     // Example: Method to get customers (Extend as needed)
     public function getAll($setupID)
     {

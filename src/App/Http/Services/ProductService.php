@@ -10,7 +10,6 @@ use Dinesh\Magento\App\Http\Services\Magento;
 class ProductService extends Magento
 {
     
-
     // Example: Method to get products (Extend as needed)
     public function getAll($setupID)
     {

@@ -11,17 +11,6 @@ use Dinesh\Magento\App\Http\Services\Magento;
 
 class OrderService extends Magento{
 
-    private static $instance = null;
-
-    // Method to get the single instance of the class (Singleton Pattern)
-    public static function getInstance()
-    {
-        if (self::$instance === null) {
-            self::$instance = new OrderService();
-        }
-
-        return self::$instance;
-    }
 
     // Example: Method to get orders (Extend as needed)
     public function getAll($setupID)
