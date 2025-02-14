@@ -5,11 +5,13 @@ namespace Dinesh\Magento\App\Http\Services;
 use Dinesh\Magento\App\Models\Orders;
 use Dinesh\Magento\App\Models\OrderLines;
 use Dinesh\Magento\App\Models\Pagination;
+use Dinesh\Magento\App\Models\OrderPayment;
 use Dinesh\Magento\App\Models\OrderBillingAddress;
 
 use Dinesh\Magento\App\Http\Services\Magento;
 
-class OrderService extends Magento{
+class OrderService extends Magento
+{
 
 
     // Example: Method to get orders (Extend as needed)
@@ -28,25 +30,25 @@ class OrderService extends Magento{
             'setupID' => $setupID,
             'endpoint' => "{$endPoint}",
         ])
-        ->orderBy('created_at', 'desc')   // Order by 'created_at' in descending order
-        ->pluck('page')
-        ->first();
+            ->orderBy('created_at', 'desc')   // Order by 'created_at' in descending order
+            ->pluck('page')
+            ->first();
 
         if ($pagination) {
             $data['searchCriteria']['currentPage'] = $pagination;
         }
-        
+
         $headers = [
             'Authorization' => "Bearer {$accessToken}", // Replace with valid token
             'Accept' => 'application/json',
         ];
 
         return $this->request('GET', $data, $headers, $endPoint, 'query', $setupID);
-
     }
 
-    public function saveRow($setupID, $order){
-       
+    public function saveRow($setupID, $order)
+    {
+
         $dbVal = [
             'setupID' => $setupID,
             'entity_id' => $order['entity_id'],
@@ -137,14 +139,14 @@ class OrderService extends Magento{
         $result = Orders::updateOrCreate($where, $dbVal);
 
         return $result;
-
     }
 
-    public function saveOrderLines($setupID, $order){
+    public function saveLines($setupID, $order)
+    {
 
         $results = [];
-        foreach( $order['items'] as $lineItem){
-            
+        foreach ($order['items'] as $lineItem) {
+
             $dbVal = [
                 'setupID' => $setupID,
                 'store_id' => $lineItem['store_id'],
@@ -177,7 +179,7 @@ class OrderService extends Magento{
                 'is_qty_decimal' => $lineItem['is_qty_decimal'],
                 'name' => $lineItem['name'],
                 'no_discount' => $lineItem['no_discount'],
-                
+
                 'original_price' => $lineItem['original_price'],
                 'price' => $lineItem['price'],
                 'price_incl_tax' => $lineItem['price_incl_tax'],
@@ -211,14 +213,13 @@ class OrderService extends Magento{
             ];
 
             $results[] = OrderLines::updateOrCreate($where, $dbVal);
-
         }
 
         return $results;
-
     }
 
-    public function saveBillingAddress($setupID, $order){
+    public function saveBillingAddress($setupID, $order)
+    {
 
         $address = $order['billing_address'];
 
@@ -251,10 +252,48 @@ class OrderService extends Magento{
         $result = OrderBillingAddress::updateOrCreate($where, $dbVal);
 
         return $result;
-
     }
 
-    public function create( $setupID, $data )
+    public function savePayment($setupID, $order)
+    {
+
+        $payment = $order['payment'];
+
+        $dbVal = [
+            'setupID' => $setupID,
+            'entity_id' => $payment['entity_id'],
+            'account_status' => $payment['account_status'],
+            'additional_information' => json_encode($payment['additional_information']),
+            'amount_ordered' => $payment['amount_ordered'],
+            'amount_paid' => $payment['amount_paid'],
+            'amount_refunded' => $payment['amount_refunded'],
+            'base_amount_ordered' => $payment['base_amount_ordered'],
+            'base_amount_paid' => $payment['base_amount_paid'],
+            'base_amount_refunded' => $payment['base_amount_refunded'],
+            'base_shipping_amount' => $payment['base_shipping_amount'],
+            'base_shipping_captured' => $payment['base_shipping_captured'],
+            'base_shipping_refunded' => $payment['base_shipping_refunded'],
+            'cc_last4' => $payment['cc_last4'],
+            'method' => $payment['method'],
+            'parent_id' => $payment['parent_id'],
+            'shipping_amount' => $payment['shipping_amount'],
+            'shipping_captured' => $payment['shipping_captured'],
+            'shipping_refunded' => $payment['shipping_refunded'],
+        ];
+
+        HookFilterService::applyFilters('order_payment_data_before_save', $dbVal, $this);
+
+        $where = [
+            'setupID' => $setupID,
+            'entity_id' => $payment['entity_id']
+        ];
+
+        $result = OrderBillingAddress::updateOrCreate($where, $dbVal);
+
+        return $result;
+    }
+
+    public function create($setupID, $data)
     {
         $accessToken = $this->getAccessToken($setupID);
         $endPoint = "/rest/V1/orders";
@@ -264,7 +303,7 @@ class OrderService extends Magento{
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
         ];
-        return $this->request('POST', $data, $headers, $endPoint, 'body' );
+        return $this->request('POST', $data, $headers, $endPoint, 'body');
     }
 
     public function get($setupID, $orderID)
@@ -292,7 +331,6 @@ class OrderService extends Magento{
         ];
 
         return $this->request('PUT', $data, $headers, $endPoint, 'body');
-        
     }
 
     public function delete($setupID, $orderID)
@@ -307,5 +345,4 @@ class OrderService extends Magento{
         ];
         return $this->request('DELETE', $data, $headers, $endPoint);
     }
-
 }

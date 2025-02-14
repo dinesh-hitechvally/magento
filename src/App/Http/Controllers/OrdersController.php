@@ -39,7 +39,9 @@ class OrdersController extends Controller
 
             $result = $this->orders->saveRow($setupID, $order);
 
-            $this->orders->saveOrderLines($setupID, $order);
+            $this->orders->saveLines($setupID, $order);
+
+            $this->orders->savePayment($setupID, $order);
 
             $this->orders->saveBillingAddress($setupID, $order);
 
@@ -111,7 +113,9 @@ class OrdersController extends Controller
 
         $result = $this->orders->saveRow($setupID, $order);
 
-        $this->orders->saveOrderLines($setupID, $order);
+        $this->orders->saveLines($setupID, $order);
+
+        $this->orders->savePayment($setupID, $order);
 
         $this->orders->saveBillingAddress($setupID, $order);
         
