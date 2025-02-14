@@ -48,7 +48,6 @@ return new class extends Migration
                  */
                 $table->index('setupID');
                 $table->index('entity_id');
-                $table->index('region_id');
                 
             });
 
