@@ -9,7 +9,6 @@ class OrderPayment extends Model
 
     protected $table = '';
     protected $connection = '';
-
     protected $primaryKey = 'paymentID';
     protected $guarded = [];
 
